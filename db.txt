@@ -1,0 +1,15 @@
+create database crackers
+CREATE TABLE `crackers`.`users` (
+  `UserId` INT NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR(45) NULL,
+  `MiddleName` VARCHAR(45) NULL,
+  `LastName` VARCHAR(45) NULL,
+  `UserEmail` VARCHAR(200) NULL,
+  `UserStatus` VARCHAR(45) NULL,
+  `CreatedBy` INT NULL,
+  `CreatedOn` DATETIME NULL,
+  `UpdatedBy` INT NULL,
+  `UpdatedOn` DATETIME NULL,
+  `UserRole` VARCHAR(45) NULL,
+  PRIMARY KEY (`UserId`));
+
