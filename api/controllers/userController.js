@@ -4,13 +4,14 @@ const userModel = require("../models/user.model");
 const fetchUsers = (req, res, next) => {
     console.log('test fetchuser')
     userModel.getAll((err, data) => {
-        if(err)
+        if (err) {
         res.status(500).send({
             message: 
             err.message || "some error occurred while retriveing users."
         });
-        else 
+    } else  {
         res.status(200).send(data)
+    }
     });
 } 
 
@@ -39,13 +40,14 @@ const createUser = (req, res, next) => {
   });*/
 
   userModel.createUser(req.body, (err, data) => {
-      if(err)
+      if (err) {
       res.status(500).send({
           message: 
           err.message || 'Some error occurred while creating the Customer'
       });
-      else 
+    } else { 
       res.status(200).send(data);
+    }
   })
 }
 
@@ -57,8 +59,9 @@ const fetchUserById = (req, res, next) => {
                 message: err.message || "some error occurred while retriveing users."
             });            
         }
-        else 
-        res.status(200).send(data)
+        else  {
+            res.status(200).send(data)
+        }
     });
 }
 const updateUserById = (req, res, next) => {
