@@ -34,7 +34,7 @@ const loginUser = (req, res, next) => {
         } else {
           res.status(409).send({
             code:409,
-            message: "Username and Password does not match"
+            message: "EmailId and Password does not match"
           })
         }
       }
