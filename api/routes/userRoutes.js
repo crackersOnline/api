@@ -16,4 +16,7 @@ router.route('/fetchUsers/:userId')
 router.route('/auth')
     .post(authController.login);
 
+router.route('/register')
+    .post(userController.register);
+
 module.exports = router;

@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 // parse request of content-type: application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true}))
-app.use(expressJwt({secret: process.env.SECRET_KEY}).unless({path: ['/api/user/auth']}));
+app.use(expressJwt({secret: process.env.SECRET_KEY}).unless({path: ['/api/user/auth', '/api/user/register']}));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
