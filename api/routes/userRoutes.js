@@ -19,4 +19,10 @@ router.route('/auth')
 router.route('/register')
     .post(userController.register);
 
+router.route('/forgotPwd')
+    .post(userController.forgotPwd)
+
+router.route('/resetPwd')
+    .post(userController.resetPwd);
+
 module.exports = router;

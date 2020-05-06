@@ -45,8 +45,23 @@ const getByUserID = (userID, result) => {
 const deleteAllUser = (result) => {
     console.log("Delete all data");
 }
+
+const updatePwd = (data, result) => {
+    let query = "UPDATE crackersdb.users SET password ='"+data.password+"' WHERE userEmail='"+data.userEmail+"'";
+    sql.query(query, (err, res) => {
+        if(err) {
+            console.log("error:", err);
+            result(null, err);
+            return;
+        }
+        console.log("found specific users:", res);
+        res.message = 'Password reset Successfully'
+        result(null, res);
+    })
+}
 module.exports = {
     getAll : getAll,
     createUser : createUser,
     getByUserID : getByUserID,
+    resetPwd: updatePwd,
 }

@@ -1,5 +1,6 @@
 'use strict';
 const userModel = require("../models/user.model");
+const helper = require('../helpers/mail.helper');
 const bcrypt = require('bcrypt');
 
 const fetchUsers = (req, res, next) => {
@@ -94,6 +95,68 @@ const deleteUserById = (req, res, next) => {
 const create = (req, res, next) => {
     
 }
+const forgotPwd = (req, res, next) => {
+    if(!req.body) {
+        res.status(400).send({
+            code: 400,
+            message:
+            "EmailId cannot be empty."
+        })
+    }
+    
+const mailOptions = {
+    from: process.env.MAILER_SENDERADD, // sender address
+    to: req.body.userEmail, // list of receivers
+    subject: 'Subject of your email', // Subject line
+    html: '<p>Your html here</p>'// plain text body
+  };
+
+  
+    helper.resetPwdMailer(mailOptions, (err, data) => {
+        if (err) {
+        res.status(500).send({
+            code: 500,
+            message: 
+            err.message || 'Some error occurred while sending Mail'
+        });
+      } else { 
+        res.status(200).send({
+            code: 200,
+            data: data
+        });
+      }
+    })
+}
+
+const resetPwd = (req, res, next) => {
+    if(!req.body) {
+        res.status(400).send({
+            code: 400,
+            message: "Content cannot be empty."
+        })
+    }
+    const saltRounds = 10;
+    const encryptPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const data = {
+        password: encryptPassword,
+        userEmail: req.body.userEmail
+    }
+    userModel.resetPwd(data, (err, data) => {
+        if(err) {
+            req.status(500).send({
+                code: 500,
+                message: 
+                err.message || 'Some error occurred while reseting Password'
+            })
+        } else {
+            res.status(200).send({
+                code: 200,
+                data: data
+            })
+        }
+    })
+
+}
 module.exports = {
     fetchUsers: fetchUsers,
     register: createUser,
@@ -101,5 +164,7 @@ module.exports = {
     updateUserById: updateUserById,
     deleteAll: deleteAllUser,
     deleteUserById: deleteUserById,
-    create: create
+    create: create,
+    forgotPwd: forgotPwd,
+    resetPwd: resetPwd
 }
