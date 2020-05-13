@@ -28,9 +28,14 @@ const loginUser = (req, res, next) => {
       } else if(data.length>0) {
         const comparisionPwd = await bcrypt.compare(password, data[0].password);
         if(comparisionPwd) {
-          var token = jwt.sign({userID: data.userID}, process.env.SECRET_KEY, { expiresIn: '2h' });
-          res.status(200).send({
-            code: 200, token});
+          var token = jwt.sign({userID: data[0].userID}, process.env.SECRET_KEY, { expiresIn: '1h' });
+          console.log('data.userName', data[0].userName);
+          var result = {
+            userName: data[0].userName,
+            token: token,
+            code: 200
+          }
+          res.status(200).send(result);
         } else {
           res.status(409).send({
             code:409,

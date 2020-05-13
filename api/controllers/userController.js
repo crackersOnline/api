@@ -128,7 +128,7 @@ const mailOptions = {
     })
 }
 
-const resetPwd = (req, res, next) => {
+ const resetPwd = async(req, res, next) => {
     if(!req.body) {
         res.status(400).send({
             code: 400,
