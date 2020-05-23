@@ -5,4 +5,7 @@
  router.route('/productlist')
     .get(productController.productList);
 
+router.route('/categories')
+    .get(productController.categoryList);
+
 module.exports = router;
