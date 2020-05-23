@@ -49,6 +49,7 @@ const loginUser = (req, res, next) => {
 
 }
 
+
 module.exports = {
   login: loginUser
 }

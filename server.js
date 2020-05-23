@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken")
 const expressJwt = require("express-jwt")
 const userRoutes = require("./api/routes/userRoutes.js")
 const productRoutes = require("./api/routes/productRoutes.js")
+
 const cors = require('cors')
+const errorHandler = require('./api/helpers/error-handler');
 
 
 const app = express();
@@ -27,9 +29,13 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
     res.json({message: "Welcome to Mathar Rest API"})
 })
-
+// app.use(authenticateToken);
 app.use("/api/user", userRoutes)
 app.use("/api/product", productRoutes)
+
+// global error handler
+ app.use(errorHandler);
+
 
 app.set('port', process.env.PORT)
 app.listen(process.env.PORT, () => {
