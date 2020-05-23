@@ -3,6 +3,7 @@ const bodyParser = require("body-parser")
 const jwt = require("jsonwebtoken")
 const expressJwt = require("express-jwt")
 const userRoutes = require("./api/routes/userRoutes.js")
+const productRoutes = require("./api/routes/productRoutes.js")
 const cors = require('cors')
 
 
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/user", userRoutes)
+app.use("/api/product", productRoutes)
 
 app.set('port', process.env.PORT)
 app.listen(process.env.PORT, () => {

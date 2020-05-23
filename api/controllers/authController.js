@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 
 
 const loginUser = (req, res, next) => {
+  console.log(req.body);
   if(!req.body) {
     req.status(400).send({
       code: 400,
