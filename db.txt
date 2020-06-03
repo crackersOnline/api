@@ -107,3 +107,35 @@ INSERT INTO `product` (`productID`,`productName`,`categoryID`,`productDescriptio
 INSERT INTO `product` (`productID`,`productName`,`categoryID`,`productDescription`,`productMRP`,`prouductPrice`,`status`,`createdBy`,`createdOn`) VALUES (8,'15 cm. Green Sparklers',4,NULL,'104','52','1',NULL,NULL);
 
 ALTER TABLE `crackersdb`.`product` CHANGE COLUMN `prouductPrice` `productPrice` VARCHAR(45) NULL DEFAULT NULL  ;
+
+CREATE  TABLE `crackersdb`.`cart` (
+  `cartID` INT NOT NULL AUTO_INCREMENT ,
+  `userID` INT NULL ,
+  `productID` INT NULL ,
+  `productName` VARCHAR(255) NULL ,
+  `categoryID` INT NULL ,
+  `categoryName` VARCHAR(255) NULL ,
+  `productPrice` VARCHAR(45) NULL ,
+  `productQty` VARCHAR(45) NULL ,
+  `userOrderStatus` INT(1) NULL ,
+  `createdOn` DATETIME NULL ,
+  `updatedOn` TIMESTAMP NULL ,
+  PRIMARY KEY (`cartID`) ,
+  INDEX `userid_idx` (`userID` ASC) ,
+  INDEX `productid_idx` (`productID` ASC) ,
+  INDEX `categoryid_idx` (`categoryID` ASC) ,
+  CONSTRAINT `userid`
+    FOREIGN KEY (`userID` )
+    REFERENCES `crackersdb`.`users` (`userID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `productid`
+    FOREIGN KEY (`productID` )
+    REFERENCES `crackersdb`.`product` (`productID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `categoryid`
+    FOREIGN KEY (`categoryID` )
+    REFERENCES `crackersdb`.`category` (`categoryID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
