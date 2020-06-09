@@ -16,6 +16,9 @@ router.route('/fetchUsers/:userId')
 router.route('/auth')
     .post(authController.login);
 
+router.route('/tokenVerify')
+    .post(authController.verifyToken);
+
 router.route('/register')
     .post(userController.register);
 

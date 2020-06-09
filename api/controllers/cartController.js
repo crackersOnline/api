@@ -1,4 +1,6 @@
 'use strict'
+const cartModel = require('../models/cart.model')
+
 const saveCart = async (req, res, next) => {
   if(!req.body) {
     res.status(400).send({
@@ -6,7 +8,7 @@ const saveCart = async (req, res, next) => {
       message: "content cannot be empty."
     })
   }
-
+ 
   cartModel.saveCartSession(req.body, (err, data) => {
     if(err) {
       res.status(500).send({

@@ -30,7 +30,7 @@ const createUser = (userData, result) => {
 }
 
 const getByUserID = (userID, result) => {
-    sql.query("SELECT * FROM crackers.users where UserId="+userID, (err, res)=>{
+    sql.query("SELECT * FROM crackersdb.users where userID="+userID, (err, res)=>{
         if(err) {
             console.log("error:", err);
             result(null, err);
