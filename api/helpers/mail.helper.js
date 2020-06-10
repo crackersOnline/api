@@ -5,26 +5,25 @@ var transporter =  nodemailer.createTransport({
   service: process.env.MAILER_SERVICE,
   auth: {
     user: process.env.MAILER_USERNAME,
-    pass: process.env.MAILER_PASSWORD
+    pass:  process.env.MAILER_PASSWORD
   }
 })
 
 
  
-const resetPwdMailer = (req, result) => {
-   transporter.sendMail(req, function(err, info){
-     if(err){
-       console.log('err', err);
-       result(null, err);
-       return;
-     } else {
-       console.log('info', info);
-       result(null, info)
-     }
-
-   })
+const sendMailer = (mailOptions) => {
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, function(err, info){
+      if(err){
+        reject(err);
+      } else {
+        resolve(info);
+      }
+    })
+  })
+   
 }
 
 module.exports = {
-  resetPwdMailer: resetPwdMailer
+  sendMailer: sendMailer
 }

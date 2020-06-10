@@ -31,4 +31,7 @@ router.route('/resetPwd')
 router.route('/emailExist')
     .post(userController.emailExist)
 
+router.route('/verfiyPIN') 
+    .post(userController.verfiyPIN)
+
 module.exports = router;

@@ -16,8 +16,6 @@ const getAll = (result) => {
 }
 
 const createUser = (userData, result) => {
-    let query = "INSERT INTO crackersdb.users SET ?"+ userData;
-    console.log("createUser ", query);
     sql.query("INSERT INTO crackersdb.users SET ?", userData, (err, res) => {
         if (err) {
             console.log("error: ", err);
@@ -66,17 +64,33 @@ const emailExist = (req, result) => {
     let query = "SELECT * from crackersdb.users WHERE userEmail='"+req.body.email+"'";
     sql.query(query, (err, res) => {
         if(err) {
-            result(null, err)
+            result(err, err)
             return;
         }
         result(null, res);
     })
 }
 
+const updateStatus = (data, result) => {
+    let query = "UPDATE crackersdb.users SET userStatus ='Active' WHERE userEmail='"+data.userEmail+"'";
+    sql.query(query, (err, res) => {
+        if(err) {
+            console.log("error:", err);
+            result(err);
+            return;
+        }
+        console.log("found specific users:", res);
+        res.message = 'User activation Successfully'
+        result(null, res);
+    })
+}
+
+
 module.exports = {
     getAll : getAll,
     createUser : createUser,
     getByUserID : getByUserID,
     resetPwd: updatePwd,
-    emailExist: emailExist
+    emailExist: emailExist,
+    updateStatus: updateStatus
 }
