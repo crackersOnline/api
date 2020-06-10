@@ -22,6 +22,7 @@ const fetchUsers = (req, res, next) => {
 } 
 
 const createUser = async (req, res, next) => {
+    console.log('req.body',req.body);
     if(!req.body) {
         res.status(400).send({
             code: 400,
@@ -37,9 +38,9 @@ const createUser = async (req, res, next) => {
 
     // Create a Customer
   const customer = {
-    userName: req.body.username,
+    userEmail: req.body.userEmail,
     password: encryptPassword,
-    userStatus: 'Active', 
+    userStatus: 'Inactive', 
   /*  FirstName: "Mathar1",
     MiddleName: "",
     LastName: "Beevi1",
@@ -57,7 +58,8 @@ const createUser = async (req, res, next) => {
           message: 
           err.message || 'Some error occurred while creating the Customer'
       });
-    } else { 
+    } else {
+
       res.status(200).send({
           code: 200,
           data: data
@@ -157,6 +159,30 @@ const mailOptions = {
     })
 
 }
+
+const emailExist = async(req, res, next) => {
+    if(!req.body) {
+        res.status(400).send({
+            code: 400,
+            message: "Content cannot be empty."
+        })
+    }
+    userModel.emailExist(req, (err, data) => {
+        if(err) {
+            req.status(500).send({
+                code: 500,
+                message: 
+                err.message || 'Some error occurred while reseting Password'
+            })
+        } else {
+            res.status(200).send({
+                code: 200,
+                data: data
+            })
+        }
+    })
+}
+
 module.exports = {
     fetchUsers: fetchUsers,
     register: createUser,
@@ -166,5 +192,6 @@ module.exports = {
     deleteUserById: deleteUserById,
     create: create,
     forgotPwd: forgotPwd,
-    resetPwd: resetPwd
+    resetPwd: resetPwd,
+    emailExist: emailExist
 }

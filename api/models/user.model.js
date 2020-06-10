@@ -16,8 +16,9 @@ const getAll = (result) => {
 }
 
 const createUser = (userData, result) => {
-    console.log("userData ", userData);
-    sql.query("INSERT INTO users SET ?", userData, (err, res) => {
+    let query = "INSERT INTO crackersdb.users SET ?"+ userData;
+    console.log("createUser ", query);
+    sql.query("INSERT INTO crackersdb.users SET ?", userData, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -59,9 +60,23 @@ const updatePwd = (data, result) => {
         result(null, res);
     })
 }
+
+const emailExist = (req, result) => {
+    console.log('req.body',req.body);
+    let query = "SELECT * from crackersdb.users WHERE userEmail='"+req.body.email+"'";
+    sql.query(query, (err, res) => {
+        if(err) {
+            result(null, err)
+            return;
+        }
+        result(null, res);
+    })
+}
+
 module.exports = {
     getAll : getAll,
     createUser : createUser,
     getByUserID : getByUserID,
     resetPwd: updatePwd,
+    emailExist: emailExist
 }

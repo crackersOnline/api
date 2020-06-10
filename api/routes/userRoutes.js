@@ -28,4 +28,7 @@ router.route('/forgotPwd')
 router.route('/resetPwd')
     .post(userController.resetPwd);
 
+router.route('/emailExist')
+    .post(userController.emailExist)
+
 module.exports = router;
