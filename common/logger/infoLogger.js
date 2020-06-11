@@ -1,6 +1,6 @@
 'use strict'
 
-const logger = require('../../../../peacock/pavo_masterMgmt_api/config/logger.js')
+const logger = require('../../config/logger.js')
 
 const logInfoCompleteForGETRoute = (sso, serviceName, getURL, logInfo) => {
   logger.info(`Service: ${serviceName} with URL: ${getURL} for SSO: ${sso} with details: ${logInfo}`)

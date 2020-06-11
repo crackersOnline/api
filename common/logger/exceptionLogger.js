@@ -1,6 +1,6 @@
 'use strict'
 
-const logger = require('../../../../peacock/pavo_masterMgmt_api/config/logger.js')
+const logger = require('../../config/logger.js')
 
 const logExceptionCompleteForGETRoute = (sso, serviceName, getURL, errStack) => {
   logger.error(`Error in service: ${serviceName} with URL: ${getURL} for SSO: ${sso} with error details: ${errStack}`)
