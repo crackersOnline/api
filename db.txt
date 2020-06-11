@@ -139,3 +139,7 @@ CREATE  TABLE `crackersdb`.`cart` (
     REFERENCES `crackersdb`.`category` (`categoryID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+    ALTER TABLE `crackersdb`.`users` ADD COLUMN `activationPIN` TEXT NULL  AFTER `userStatus` ;
+ALTER TABLE `crackersdb`.`users` CHANGE COLUMN `userRole` `userRole` VARCHAR(45) NULL DEFAULT 'User'  ;
+

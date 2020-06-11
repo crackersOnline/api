@@ -1,48 +1,39 @@
 'use strict';
 const lodash = require('lodash')
-const productModel = require("../models/product.model")
+const productMgmtService = require("../services/productMgmtService")
 
-const productList = (req, res, next) => {
-    console.log('test productList')
-    productModel.getProducts((err, data) => {
-        if (err) {
-        res.status(500).send({
-            code: 500,
-            message: 
-            err.message || "some error occurred while retriveing users."
-        });
-    } else  {        
-        var masterData = lodash.groupBy(data, 'categoryName');
-        // var masterData = lodash.mapValues(lodash.groupBy(data, 'categoryID'),
-        // clist => clist.map(row => lodash.omit(row, 'categoryID')));     
-        console.log("clist",masterData);   
-        res.status(200).send({
-            code:200,
-            data: Object.entries(masterData)
-        })
-    }
-    });
-}
-const categoryList = (req, res, next) => {
-    console.log('test categoryList')
-    productModel.getcategories((err, data) => {
-        if (err) {
-        res.status(500).send({
-            code: 500,
-            message: 
-            err.message || "some error occurred while retriveing users."
-        });
-    } else  {        
-        res.status(200).send({
-            code:200,
-            data: data
-        })
-    }
-    });
+
+const fetchProducts = (request, response, next) => {
+    productMgmtService.getProducts(request)
+      .then(results => {
+        if (results.recCount === 0) {
+          infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
+          response.status(204).send(responseMessages.noDataFound)
+        } else {
+          response.status(200).send(results)
+        }
+      })
+      .catch(error => {
+        next(error)
+    })
 }
 
+const fetchCategories = (request, response, next) => {
+    productMgmtService.getCategories(request)
+    .then(results => {
+      if (results.recCount === 0) {
+          infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
+          response.status(204).send(responseMessages.noDataFound)
+      } else {
+          response.status(200).send(results)
+      }
+      })
+      .catch(error => {
+        next(error)
+      })
+}
 
 module.exports = {
-    productList: productList,
-    categoryList: categoryList
+    productList: fetchProducts,
+    categoryList: fetchCategories
 }

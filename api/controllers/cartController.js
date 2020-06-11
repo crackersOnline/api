@@ -1,30 +1,21 @@
 'use strict'
-const cartModel = require('../models/cart.model')
+const cartMgmtService = require('../services/cartMgmtService')
 
-const saveCart = async (req, res, next) => {
-  if(!req.body) {
-    res.status(400).send({
-      code: 400,
-      message: "content cannot be empty."
+const saveCart = (request, response, next) => {
+  cartMgmtService.tempCartSave(request)
+    .then(results => {
+      if (results.recCount === 0) {
+        infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
+        response.status(204).send(responseMessages.noDataFound)
+      } else {
+        response.status(200).send(results)
+      }
     })
-  }
- 
-  cartModel.saveCartSession(req.body, (err, data) => {
-    if(err) {
-      res.status(500).send({
-        code: 500,
-        message: 
-        err.message || 'Some error occurred while creating the Customer'
-    });
-    } else { 
-      res.status(200).send({
-          code: 200,
-          data: data
-      });
-    }
+    .catch(error => {
+      next(error)
   })
-  
 }
+
 
 module.exports = {
   saveCart: saveCart,

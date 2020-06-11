@@ -3,15 +3,11 @@
  const userController = require('../controllers/userController');
  const authController = require('../controllers/authController')
 
- router.route('/Users')
-    .post(userController.create)
+ router.route('/fetchUsers')
     .get(userController.fetchUsers)
-    .delete(userController.deleteAll)
 
-router.route('/fetchUsers/:userId')
+router.route('/fetchUsers/:userID')
     .get(userController.fetchUserById)
-    .put(userController.updateUserById)
-    .delete(userController.deleteUserById)
 
 router.route('/auth')
     .post(authController.login);
