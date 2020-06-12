@@ -27,10 +27,10 @@ const buildUserSaveQuery = (req, userAction) => {
     query += 'UPDATE crackersdb.users '
     query += 'SET '
     query += 'userEmail = ' + "'" + replace(req.body.userEmail) + "'," 
-    query += 'password = ' + "'" + req.body.password + "'," 
-    query += 'activationPIN = ' + "'" + req.body.activationPIN + "',"
-    query += 'updatedBy = ' + "'" + req.body.updatedBy + "',"
-    query += 'userStatus = ' + "'" + req.body.userStatus + "',"
+    query += (req.body.password ) ?  'password = ' + "'" + req.body.password + "'," : ''
+    query += (req.body.activationPIN) ?  'activationPIN = ' + "'" + req.body.activationPIN + "'," : ''
+    query += (req.body.updatedBy)?  'updatedBy = ' + "'" + req.body.updatedBy + "'," : 'updatedBy = 1, '
+    query += (req.body.userStatus) ? 'userStatus = ' + "'" + req.body.userStatus + "'," :''
     query += 'updatedOn =  ' + "now() "
     query += ' WHERE userEmail =' + "'" + req.body.userEmail + "'"
     return query

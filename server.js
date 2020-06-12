@@ -23,7 +23,7 @@ app.use(expressValidator(validatorAndSanitizer)) // This line must be immediatel
 app.use(helmet())
 
 app.use(expressJwt({secret: process.env.SECRET_KEY}).unless({
-    path: ['/api/user/auth', '/api/user/register', '/api/user/tokenVerify', '/api/user/emailExist']}));
+    path: ['/api/user/auth', '/api/user/register', '/api/user/tokenVerify', '/api/user/emailExist', '/api/user/verfiyPIN', '/api/user/forgotPwd', '/api/user/resetPwd']}));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')

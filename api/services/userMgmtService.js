@@ -40,17 +40,26 @@ const sendMail = (mailOptions) => {
 // Function is used to insert the user
 async function createUser (request) {
   var results = {}
+  var userDetail  = '';
   try {
     let password = request.body.password;
     let saltRounds = 10;
-    let generatePIN = Math.floor(1000 + Math.random()*9000);
+    let generatePIN =  Math.floor(1000 + Math.random()*9000)
     request.body.password = await bcrypt.hash(password, saltRounds);
-    request.body.activationPIN = await bcrypt.hash('"'+ generatePIN +'"', saltRounds);
+    console.log('generatePIN', generatePIN, saltRounds)
+    request.body.activationPIN = await bcrypt.hash(generatePIN.toString(), saltRounds);
     request.body.userStatus =  'Inactive'
     request.body.createdBy = 1 // loginuser
+    request.body.updatedBy = 1 // loginuser
 
-    var data = await userMgmtDAL.createUser(request)
-    if (data) {
+    const checkEmailExist = await userMgmtDAL.emailExist(request);
+    if(checkEmailExist) {
+      userDetail  = await userMgmtDAL.updateUser(request)
+    } else {
+      userDetail = await userMgmtDAL.createUser(request)
+    }
+
+    if (userDetail) {
       const mailOptions = {
         from: process.env.MAILER_SENDERADD, // sender address
         to: request.body.userEmail, // list of receivers
@@ -59,11 +68,11 @@ async function createUser (request) {
       };
       const mailer = await helper.sendMailer(mailOptions)
       if(mailer) {
-        data.userSave.userEmail = request.body.userEmail
+        userDetail.userSave.userEmail = request.body.userEmail
         results = {
           code: 200,
-          data: data.userSave,
-          recCount:data.userSave.affectedRows
+          data: userDetail.userSave,
+          recCount: userDetail.userSave.affectedRows
         }
         return results;
       } else {
@@ -130,26 +139,50 @@ async function fetchUserByUserID (request) {
 }
 
 
-async function forgotPwd (req) {
+async function forgotPwd (request) {
     var results = {}
     try {
-    const mailOptions = {
-        from: process.env.MAILER_SENDERADD, // sender address
-        to: req.body.userEmail, // list of receivers
-        subject: 'Subject of your email', // Subject line
-        html: '<p>Your html here</p>'// plain text body
-      };
-      const mailer = await helper.sendMailer(mailOptions)
-      if(mailer) {
-        results = {
-          code: 200,
-          data: data,
-          recCount: 1
-        }
-        return results;
+      request.body.userStatus = 'Active'
+      let checkEmailExist = await userMgmtDAL.emailExist(request)
+      if(!checkEmailExist) { 
+        console.log('!checkEmailExist', !checkEmailExist);
+        throw new DBError('Data not found')
       } else {
-        throw new DBError('Mail not sent')
-      } 
+        if(checkEmailExist.recCount> 0) {
+          let saltRounds = 10;
+          let generatePIN =  Math.floor(1000 + Math.random()*9000)
+          request.body.activationPIN = await bcrypt.hash(generatePIN.toString(), saltRounds);
+          request.body.userStatus =  'Inactive'
+          let userSave = await userMgmtDAL.updateUser(request)
+          if(userSave) {
+            const mailOptions = {
+              from: process.env.MAILER_SENDERADD, // sender address
+              to: request.body.userEmail, // list of receivers
+              subject: 'Your Forgot password Reset PIN', // Subject line
+              html: '<p>New password activation PIN '+ generatePIN +'</p>'// plain text body
+            };
+            const mailer = await helper.sendMailer(mailOptions)
+            if(mailer) {
+              results = {
+                code: 200,
+                data: checkEmailExist,
+                recCount: 1
+              }
+              return results;
+            } else {
+              throw new DBError('Mail not sent')
+            } 
+          }
+          } else {
+          results = {
+            code: 401,
+            message: "Email ID does not exist",
+            recCount: checkEmailExist.recCount
+          }
+          console.log('checkEmailExist 0', results);
+          return results;
+        }
+      }
   }
     catch (error) {
       console.log(error)
@@ -226,10 +259,23 @@ async function verfiyPIN (request) {
     request.body.userStatus = 'Inactive';
     var results = await userMgmtDAL.emailExist(request)
     if (results) {
-      if (results.recCount > 0) {
-        const comparePIN = await bcrypt.compare(request.body.activationPIN, results.user[0].activationPIN);
+      if (results.recCount > 0) {  
+        let activationPIN = request.body.activationPIN 
+        
+        console.log('results.user[0].activationPIN', results.user[0].activationPIN, request.body.activationPIN, activationPIN);
+      
+        const comparePIN = await bcrypt.compare(activationPIN.toString(), results.user[0].activationPIN);
+        console.log('comparePIN', comparePIN);
         if(comparePIN) {
-          await userModel.updateStatus(request.body);
+          request.body = {
+            activationPIN: '',
+            userStatus: 'Active',
+            updatedBy: 1,
+            password: results.user[0].password,
+            userEmail: request.body.userEmail
+          }
+          console.log('request', request.body)
+          await userMgmtDAL.updateUser(request);
           result = {
               code: 200,
               message: 'sucess',

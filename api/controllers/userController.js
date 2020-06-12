@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 */
 const userMgmtService = require("../services/userMgmtService")
 const responseMessages = require("../constants/constants")['responseMessages']
+const infoLogger = require('../../common/logger/infoLogger')
 
 // This function gets all the list of the users
 const fetchUsers = (request, response, next) => {
@@ -93,15 +94,10 @@ const fetchUserById = (request, response, next) => {
 
   
 const forgotPwd = (request, response, next) => {
-    console.log("Request Param:", request.params.userID)
+    console.log("Request Param:", request.body.userEmail)
     userMgmtService.forgotPwd(request)
     .then(results => {
-        if(results.recCount === 0) {
-          infoLogger.logInfo('User Mgmt - Delete', request, responseMessages.noDataFound)
-          response.status(204).send(responseMessages.noDataFound)
-        } else {
           response.status(results.code).send(results)
-        }
       })
       .catch(error => {
         next(error)
@@ -138,7 +134,7 @@ const emailExist = (request, response, next) => {
 
 
 const verfiyPIN = (request, response, next) => {
-  req.body.userStatus = 'Inactive';
+  console.log('verifyPIN', request.body)
   userMgmtService.verfiyPIN(request)
   .then(results => {
       if(results.recCount === 0) {
