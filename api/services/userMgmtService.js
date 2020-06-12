@@ -53,7 +53,8 @@ async function createUser (request) {
     request.body.updatedBy = 1 // loginuser
 
     const checkEmailExist = await userMgmtDAL.emailExist(request);
-    if(checkEmailExist) {
+    console.log('checkEmailExist',checkEmailExist);
+    if(checkEmailExist.recCount > 0) {
       userDetail  = await userMgmtDAL.updateUser(request)
     } else {
       userDetail = await userMgmtDAL.createUser(request)
