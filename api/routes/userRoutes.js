@@ -22,7 +22,7 @@ router.route('/forgotPwd')
     .post(userController.forgotPwd)
 
 router.route('/resetPwd')
-    .post(userController.resetPwd);
+    .put(userController.resetPwd);
 
 router.route('/emailExist')
     .post(userController.emailExist)

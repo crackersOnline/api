@@ -153,7 +153,7 @@ async function forgotPwd (request) {
           let saltRounds = 10;
           let generatePIN =  Math.floor(1000 + Math.random()*9000)
           request.body.activationPIN = await bcrypt.hash(generatePIN.toString(), saltRounds);
-          request.body.userStatus =  'Inactive'
+          //request.body.userStatus =  'Inactive'
           let userSave = await userMgmtDAL.updateUser(request)
           if(userSave) {
             const mailOptions = {
@@ -207,8 +207,8 @@ async function resetPwd (request) {
       const mailOptions = {
         from: process.env.MAILER_SENDERADD, // sender address
         to: request.body.userEmail, // list of receivers
-        subject: 'Registration activation PIN', // 'Subject of your email', // Subject line
-        html: '<p> Your generated PIN '+ generatePIN + '</p>'// '<p>Your html here</p>'// plain text body
+        subject: 'Password Reset Sucessfully', // 'Subject of your email', // Subject line
+        html: '<p>Password Reset Sucessfully</p>'// '<p>Your html here</p>'// plain text body
       };
       const mailer = await helper.sendMailer(mailOptions)
       if(mailer) {

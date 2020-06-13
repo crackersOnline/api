@@ -18,6 +18,7 @@ async function verifyToken (request) {
         results.token = token
         const result = {
           userName: results.users[0].userName,
+          userEmail:results.users[0].userEmail,
           token: token,
           code: 200,
           recCount: results.recCount
@@ -51,6 +52,7 @@ async function loginUser (request) {
           console.log('results.userName', userDetails.userName);
           const result = {
             userName: userDetails.userName,
+            userEmail:userDetails.userEmail,
             token: token,
             code: 200,
             recCount: results.recCount
