@@ -19,7 +19,7 @@ async function fetchUsers (request) {
       throw new DBError('Data not found')
     }
   } catch (error) {
-    console.log('')
+    // console.log('')
     throw error
   }
 }
@@ -28,10 +28,10 @@ async function fetchUsers (request) {
 const sendMail = (mailOptions) => {
   helper.sendMailer(mailOptions, (err, data) => {
       if (err) {
-      console.log('err in userCOntroller', err);
+      // console.log('err in userCOntroller', err);
       return err;
       } else { 
-          console.log('mail return', data);
+          // console.log('mail return', data);
       return data;
       }
   })
@@ -46,14 +46,14 @@ async function createUser (request) {
     let saltRounds = 10;
     let generatePIN =  Math.floor(1000 + Math.random()*9000)
     request.body.password = await bcrypt.hash(password, saltRounds);
-    console.log('generatePIN', generatePIN, saltRounds)
+    // console.log('generatePIN', generatePIN, saltRounds)
     request.body.activationPIN = await bcrypt.hash(generatePIN.toString(), saltRounds);
     request.body.userStatus =  'Inactive'
     request.body.createdBy = 1 // loginuser
     request.body.updatedBy = 1 // loginuser
 
     const checkEmailExist = await userMgmtDAL.emailExist(request);
-    console.log('checkEmailExist',checkEmailExist);
+    // console.log('checkEmailExist',checkEmailExist);
     if(checkEmailExist.recCount > 0) {
       userDetail  = await userMgmtDAL.updateUser(request)
     } else {
@@ -83,7 +83,7 @@ async function createUser (request) {
         throw new DBError('Data not found')
       }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -99,7 +99,7 @@ async function updateUser (request) {
       return results
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -114,7 +114,7 @@ async function deleteUser (request) {
       return results
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -134,7 +134,7 @@ async function fetchUserByUserID (request) {
     }
   }
   catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -146,7 +146,7 @@ async function forgotPwd (request) {
       request.body.userStatus = 'Active'
       let checkEmailExist = await userMgmtDAL.emailExist(request)
       if(!checkEmailExist) { 
-        console.log('!checkEmailExist', !checkEmailExist);
+        // console.log('!checkEmailExist', !checkEmailExist);
         throw new DBError('Data not found')
       } else {
         if(checkEmailExist.recCount> 0) {
@@ -180,13 +180,13 @@ async function forgotPwd (request) {
             message: "Email ID does not exist",
             recCount: checkEmailExist.recCount
           }
-          console.log('checkEmailExist 0', results);
+          // console.log('checkEmailExist 0', results);
           return results;
         }
       }
   }
     catch (error) {
-      console.log(error)
+      // console.log(error)
       throw error
     }
   }
@@ -225,7 +225,7 @@ async function resetPwd (request) {
         throw new DBError('Data not found')
       }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -236,7 +236,7 @@ async function emailExist (request) {
   try {
     request.body.userStatus = 'Active'
     var results = await userMgmtDAL.emailExist(request)
-    console.log('emailExist - service', results);
+    // console.log('emailExist - service', results);
     if (results) {
       if (results.recCount > 0) {
         return results
@@ -248,7 +248,7 @@ async function emailExist (request) {
     }
   }
   catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -263,10 +263,10 @@ async function verfiyPIN (request) {
       if (results.recCount > 0) {  
         let activationPIN = request.body.activationPIN 
         
-        console.log('results.user[0].activationPIN', results.user[0].activationPIN, request.body.activationPIN, activationPIN);
+        // console.log('results.user[0].activationPIN', results.user[0].activationPIN, request.body.activationPIN, activationPIN);
       
         const comparePIN = await bcrypt.compare(activationPIN.toString(), results.user[0].activationPIN);
-        console.log('comparePIN', comparePIN);
+        // console.log('comparePIN', comparePIN);
         if(comparePIN) {
           request.body = {
             activationPIN: '',
@@ -275,7 +275,7 @@ async function verfiyPIN (request) {
             password: results.user[0].password,
             userEmail: request.body.userEmail
           }
-          console.log('request', request.body)
+          // console.log('request', request.body)
           await userMgmtDAL.updateUser(request);
           result = {
               code: 200,
@@ -304,7 +304,7 @@ async function verfiyPIN (request) {
     }
   }
   catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }

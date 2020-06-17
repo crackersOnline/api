@@ -11,7 +11,7 @@ const jwtValidator = (req, res, next) => {
 
     jwt.verify(token, process.env.KEY, function (err, decoded) {
       if (err) {
-        console.log(err)
+        // console.log(err)
 
         switch (err.name) {
           case 'TokenExpiredError':

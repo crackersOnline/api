@@ -10,7 +10,7 @@ function fetchUsers (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildfetchUserQuery(request)
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -34,7 +34,7 @@ function fetchUsers (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -46,7 +46,7 @@ function createUser (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildUserSaveQuery(request, 'INSERT')
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -69,7 +69,7 @@ function createUser (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -81,7 +81,7 @@ function updateUser (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildUserSaveQuery(request, 'UPDATE')
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -104,7 +104,7 @@ function updateUser (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -116,7 +116,7 @@ function deleteUser (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildInactiveQuery(request)
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -139,7 +139,7 @@ function deleteUser (request) {
         })
       })
       .catch(error => {
-        console.log("create pool error")
+        // console.log("create pool error")
         reject(error)
       })
   })
@@ -151,7 +151,7 @@ function fetchUserByUserID ( request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildfetchUserByUserIDQuery(request)
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if(err) {
             reject(new DBError(err))
@@ -175,7 +175,7 @@ function fetchUserByUserID ( request) {
         })
       }) 
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -187,7 +187,7 @@ function emailExist ( request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildfetchEmailFromUsers(request)
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if(err) {
             reject(new DBError(err))
@@ -211,7 +211,7 @@ function emailExist ( request) {
         })
       }) 
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })

@@ -77,7 +77,7 @@ const fetchUsers = (request, response, next) => {
   
   
 const fetchUserById = (request, response, next) => {
-    console.log("Request Param:", request.params.userID)
+    // console.log("Request Param:", request.params.userID)
     userMgmtService.fetchUsersByUserID(request)
     .then(results => {
         if(results.recCount === 0) {
@@ -94,7 +94,7 @@ const fetchUserById = (request, response, next) => {
 
   
 const forgotPwd = (request, response, next) => {
-    console.log("Request Param:", request.body.userEmail)
+    // console.log("Request Param:", request.body.userEmail)
     userMgmtService.forgotPwd(request)
     .then(results => {
           response.status(results.code).send(results)
@@ -104,7 +104,7 @@ const forgotPwd = (request, response, next) => {
       })
 }
 
-const resetPwd = (request, res, next) => {
+const resetPwd = (request, response, next) => {
     userMgmtService.resetPwd(request)
     .then(results => {
         if(results.recCount === 0) {
@@ -131,10 +131,8 @@ const emailExist = (request, response, next) => {
     })
 }
 
-
-
 const verfiyPIN = (request, response, next) => {
-  console.log('verifyPIN', request.body)
+  // console.log('verifyPIN', request.body)
   userMgmtService.verfiyPIN(request)
   .then(results => {
       if(results.recCount === 0) {

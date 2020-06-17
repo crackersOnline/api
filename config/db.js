@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const ConnError = require('../common/exception/connException')
 
 function createPool () {
-    console.log('Inside local')
+    // console.log('Inside local')
     return new Promise(function (resolve, reject) {
         const pool = mysql.createPool({
             host: process.env.DB_ENDPOINT,

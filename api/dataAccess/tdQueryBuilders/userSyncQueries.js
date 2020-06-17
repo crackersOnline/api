@@ -9,7 +9,7 @@ const buildFetchSSOFromPostgredbQuery = (req) => {
   'INNER JOIN "public"."group_users" "group_users" ON ("_users"."id" = "group_users"."user_id") ' +
   'INNER JOIN "public"."groups" "groups" ON ("group_users"."group_id" = "groups"."id") ' +
   'where _sites.name = ' + "'Peacock'"
-  console.log(query)
+  // console.log(query)
   return query
 }
 
@@ -17,7 +17,7 @@ const buildFetchSSOFromPostgredbQuery = (req) => {
 const buildFetchSSOFromPavodbQuery = (req) => {
   var query = 'SELECT distinct userSSO, userStatus ' +
   'FROM pavodb.Users'
-  console.log(query)
+  // console.log(query)
   return query
 }
 
@@ -59,15 +59,15 @@ const buildUserSaveQuery = (req, userAction) => {
     query += 'CostCentreID = ' + req.CostCentreID + " " 
     query += ' WHERE UserSSO =' + "'" + req.UserSSO + "'"
   }
-  console.log(query)
+  // console.log(query)
   return query
 }
 
 // update userstatus to users table
 const buildUpdateUnwantedSSOFromPavoUser = (req) => {
-  // console.log('Delete req', req);
+  // // console.log('Delete req', req);
   var query = "UPDATE pavodb.Users SET UserStatus = 'Inactive' WHERE UserSSO IN (" + req.toString() + ")"
-  console.log(query)
+  // console.log(query)
   return query
 }
 
@@ -81,14 +81,14 @@ const replace = (data) => {
 // Fetch category from categoryMaster table
 const buldFetchCategoryListFromMaster = () => {
   var query = "SELECT CatgID FROM pavodb.CategoryMaster WHERE IsSecure = 'N'"
-  console.log(query)
+  // console.log(query)
   return query
 }
 
 // Fetch particular costcentreID from costcentre Master Table
 const buildFetchCostCenterIDFromMaster = (costcentreDesc) => {
   var query = "SELECT CostCentreID, CostCentreDesc FROM pavodb.CostCentreMaster WHERE CostCentreCode='" + costcentreDesc + "'"
-  console.log(query)
+  // console.log(query)
   return query
 }
 
@@ -105,7 +105,7 @@ const buildFetchSubBusinessIDFromMaster = (req) => {
     }
   }
   var query = "SELECT SubBusinessID, SubBusinessDesc FROM pavodb.SubBusinessMaster WHERE (" + orgsegmentWhereQuery +") "
-  console.log(query)
+  // console.log(query)
   return query
 }
 
@@ -122,7 +122,7 @@ const buildInsertSubBusinessFromMaster = (subBusinessDesc) => {
   query += "'" + process.env.IAM_USERNAME + "',"
   query += "'" + estDateTime.format() + "'"
   query += ' ) '
-  console.log('buildInsertSubBusinessFromMaster ---  ', query)
+  // console.log('buildInsertSubBusinessFromMaster ---  ', query)
   return query
 }
 
@@ -139,7 +139,7 @@ const buildInsertCostCentreFromMaster = (CostCentreDesc) => {
   query += "'" + estDateTime.format() + "',"
   query += "'" + CostCentreDesc + "'"
   query += ' ) '
-  console.log('buildInsertCostCentreFromMaster ---  ', query)
+  // console.log('buildInsertCostCentreFromMaster ---  ', query)
   return query
 }
 

@@ -12,7 +12,7 @@ async function getProducts (request) {
         var masterData = lodash.groupBy(results.data, 'categoryName');
       // var masterData = lodash.mapValues(lodash.groupBy(data, 'categoryID'),
       // clist => clist.map(row => lodash.omit(row, 'categoryID')));     
-     // console.log("clist",masterData);   
+     // // console.log("clist",masterData);   
       var result = {
           code:200,
           data: Object.entries(masterData),
@@ -26,7 +26,7 @@ async function getProducts (request) {
       throw new DBError('Data not found')
     }
   } catch (error) {
-    console.log('')
+    // console.log('')
     throw error
   }
 }
@@ -41,7 +41,7 @@ async function createProduct (request) {
       return results
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -56,7 +56,7 @@ async function updateProduct (request) {
       return results
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }
@@ -75,7 +75,7 @@ async function getCategories(request) {
       throw new DBError('Data not found')
     }
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw error
   }
 }

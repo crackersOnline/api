@@ -16,7 +16,7 @@ function errorHandler(err, req, res, next) {
             message: 'Invalid Token',
             type: 'internal' });
     }
-console.log('err',err);
+// console.log('err',err);
     // default to 500 server error
     return res.status(500).json({
         code: 500,

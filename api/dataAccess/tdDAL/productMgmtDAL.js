@@ -10,7 +10,7 @@ function getProducts (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildFetchProductsQuery(request)
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -34,7 +34,7 @@ function getProducts (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -46,7 +46,7 @@ function fetchCategories (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildFetchCategoriesQuery(request)
-        console.log('fetchCategories', dbQuery)
+        // console.log('fetchCategories', dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -70,7 +70,7 @@ function fetchCategories (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -81,7 +81,7 @@ function createProduct (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.builProductSaveQuery(request, 'INSERT')
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -104,7 +104,7 @@ function createProduct (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -116,7 +116,7 @@ function updateProduct (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildProductSaveQuery(request, 'UPDATE')
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -139,7 +139,7 @@ function updateProduct (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })

@@ -31,7 +31,7 @@ async function verifyToken (request) {
       throw new DBError('Data not found')
     }
   } catch (error) {
-    console.log('')
+    // console.log('')
     throw error
   }
 }
@@ -43,13 +43,13 @@ async function loginUser (request) {
     var password = request.body.password;
     var results = await authMgmtDAL.fetchUserByEmailID(request)
     if (results) {
-      console.log('result', results);
+      // console.log('result', results);
       if (results.recCount > 0) {
         const userDetails = results.users[0]
         const comparisionPwd = await bcrypt.compare(password, userDetails.password);
         if(comparisionPwd) {
           var token = jwt.sign({userID: userDetails.userID}, process.env.SECRET_KEY, { expiresIn: '1h' });
-          console.log('results.userName', userDetails.userName);
+          // console.log('results.userName', userDetails.userName);
           const result = {
             userName: userDetails.userName,
             userEmail:userDetails.userEmail,
@@ -78,7 +78,7 @@ async function loginUser (request) {
       throw new DBError('Data not found')
     }
   } catch (error) {
-    console.log('')
+    // console.log('')
     throw error
   }
 }

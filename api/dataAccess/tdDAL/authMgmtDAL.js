@@ -8,7 +8,7 @@ function fetchUserByEmailID (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildfetchUserByColumnQuery(request, 'userEmail')
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -32,7 +32,7 @@ function fetchUserByEmailID (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
@@ -43,7 +43,7 @@ function fetchUserByUserID (request) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildfetchUserByColumnQuery(request, 'userID')
-        console.log(dbQuery)
+        // console.log(dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -67,7 +67,7 @@ function fetchUserByUserID (request) {
         })
       })
       .catch(error => {
-        console.log('create pool error')
+        // console.log('create pool error')
         reject(error)
       })
   })
