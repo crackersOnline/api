@@ -38,8 +38,16 @@ const buildProductSaveQuery = (req, userAction) => {
 }
 
 
+// This function returns query to get all the demos based on programId for a given date from teradata
+const buildfetchCartItemByUserQuery = (req) => {
+  console.log('req.body.productID', req.body);
+  var query = "SELECT cartID FROM crackersdb.cart where productID= '" + req.body[0].productID + "' AND userID = '"+ req.body.userID +"' "
+  return query
+}
+
 module.exports = {
   buildFetchProductsQuery: buildFetchProductsQuery,
   buildFetchCategoriesQuery: buildFetchCategoriesQuery,
   buildProductSaveQuery: buildProductSaveQuery,
+  buildfetchCartItemByUserQuery: buildfetchCartItemByUserQuery,
 }

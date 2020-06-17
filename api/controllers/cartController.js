@@ -2,6 +2,7 @@
 const cartMgmtService = require('../services/cartMgmtService')
 
 const saveCart = (request, response, next) => {
+  console.log(request.body)
   cartMgmtService.tempCartSave(request)
     .then(results => {
       if (results.recCount === 0) {

@@ -146,9 +146,85 @@ function updateProduct (request) {
 }
 
 
+// Function is used to insert the user
+function buildSaveTempCart (request, type) {
+  console.log('type', type)
+  return new Promise(function (resolve, reject) {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.buildTempCartSaveQuery(request, type)
+        // console.log(dbQuery)
+        pool.getConnection((err, connection) => {
+          if (err) {
+            reject(new DBError(err))
+          }
+          if (connection) {
+            connection.query(dbQuery, function (err, rows, fields) {
+              // Connection is automatically released when query resolves
+              if (err) {
+                reject(new DBError(err))
+              } else {
+                var results = {
+                  userSave: rows,
+                  dbErr: null
+                }
+                connection.destroy()
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch(error => {
+        // console.log('create pool error')
+        reject(error)
+      })
+  })
+}
+
+
+function fetchCartItemByUser (request) {
+  return new Promise(function (resolve, reject) {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.buildfetchCartItemByUserQuery(request)
+         console.log('fetchCartItemByUser', dbQuery)
+        pool.getConnection((err, connection) => {
+          if (err) {
+            reject(new DBError(err))
+          }
+          if (connection) {
+            connection.query(dbQuery, function (err, rows, fields) {
+              // Connection is automatically released when query resolves
+              if (err) {
+                reject(new DBError(err))
+              } else {
+                console.log('rows',rows, rows.length);
+                var results = {
+                  recCount: rows.length,
+                  data: rows,
+                  dbErr: null
+                }
+                connection.destroy()
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch(error => {
+        // console.log('create pool error')
+        reject(error)
+      })
+  })
+}
+
+
 module.exports = {
   getProducts: getProducts,
   fetchCategories: fetchCategories,
   createProduct: createProduct,
-  updateProduct: updateProduct
+  updateProduct: updateProduct,
+  buildSaveTempCart: buildSaveTempCart,
+  fetchCartItemByUser: fetchCartItemByUser
 }
