@@ -142,4 +142,7 @@ CREATE  TABLE `crackersdb`.`cart` (
 
     ALTER TABLE `crackersdb`.`users` ADD COLUMN `activationPIN` TEXT NULL  AFTER `userStatus` ;
 ALTER TABLE `crackersdb`.`users` CHANGE COLUMN `userRole` `userRole` VARCHAR(45) NULL DEFAULT 'User'  ;
+ALTER TABLE `crackersdb`.`cart` CHANGE COLUMN `userOrderStatus` `userOrderStatus` INT(1) NULL DEFAULT 0  ;
+ALTER TABLE `crackersdb`.`cart` CHANGE COLUMN `productQty` `productQty` INT NULL DEFAULT NULL  ;
+
 

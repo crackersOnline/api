@@ -153,7 +153,7 @@ function buildSaveTempCart (request, type) {
     db.createPool()
       .then(pool => {
         var dbQuery = buildQuery.buildTempCartSaveQuery(request, type)
-        // console.log(dbQuery)
+         console.log('buildSaveTempCart',dbQuery)
         pool.getConnection((err, connection) => {
           if (err) {
             reject(new DBError(err))
@@ -166,7 +166,8 @@ function buildSaveTempCart (request, type) {
               } else {
                 var results = {
                   userSave: rows,
-                  dbErr: null
+                  dbErr: null,
+                  recCount: rows.affectedRows
                 }
                 connection.destroy()
                 resolve(results)
@@ -184,6 +185,7 @@ function buildSaveTempCart (request, type) {
 
 
 function fetchCartItemByUser (request) {
+  console.log('DAL', request)
   return new Promise(function (resolve, reject) {
     db.createPool()
       .then(pool => {
@@ -220,11 +222,49 @@ function fetchCartItemByUser (request) {
 }
 
 
+function fetchCartData (request) {
+  return new Promise(function (resolve, reject) {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.buildFetchCartDataQuery(request)
+        // console.log(dbQuery)
+        pool.getConnection((err, connection) => {
+          if (err) {
+            reject(new DBError(err))
+          }
+          if (connection) {
+            connection.query(dbQuery, function (err, rows, fields) {
+              // Connection is automatically released when query resolves
+              if (err) {
+                reject(new DBError(err))
+              } else {
+                var results = {
+                  recCount: rows.length,
+                  data: rows,
+                  dbErr: null
+                }
+                connection.destroy()
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch(error => {
+        // console.log('create pool error')
+        reject(error)
+      })
+  })
+}
+
+
+
 module.exports = {
   getProducts: getProducts,
   fetchCategories: fetchCategories,
   createProduct: createProduct,
   updateProduct: updateProduct,
   buildSaveTempCart: buildSaveTempCart,
-  fetchCartItemByUser: fetchCartItemByUser
+  fetchCartItemByUser: fetchCartItemByUser,
+  fetchCartData: fetchCartData
 }

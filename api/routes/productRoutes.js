@@ -11,4 +11,8 @@ router.route('/categories')
 
 router.route('/cartsave')
     .post(cartController.saveCart)
+
+router.route('/getCartData')
+    .get(cartController.fetchCartData)
+
 module.exports = router;
