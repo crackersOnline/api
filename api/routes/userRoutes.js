@@ -30,4 +30,9 @@ router.route('/emailExist')
 router.route('/verfiyPIN') 
     .post(userController.verfiyPIN)
 
+router.route('/addressBook')
+    .get(userController.fetchAddress)
+    .post(userController.saveAddressBookDetail)
+
+
 module.exports = router;

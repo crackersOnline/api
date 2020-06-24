@@ -147,6 +147,34 @@ const verfiyPIN = (request, response, next) => {
     })
 }
 
+const fetchAddress = (request, response, next) => {
+  userMgmtService.fetchAddress(request)
+    .then(results => {
+      if(results.recCount === 0) {
+        infoLogger.logInfo('User Mgmt - Delete', request, responseMessages.noDataFound)
+        response.status(204).send(responseMessages.noDataFound)
+      } else {
+        response.status(200).send(results)
+      }
+    })
+    .catch(error => {
+      next(error)
+    })
+}
+
+const saveAddressBookDetail = (request, response, next) => {
+  userMgmtService.saveAddressBookDetail(request)
+    .then(results => {
+      if(results.recCount === 0) {
+        infoLogger.logInfo('User Mgmt - Delete', request, responseMessages.noDataFound)
+        response.status(204).send(responseMessages.noDataFound)
+      } else {
+        response.status(200).send(results)
+      }
+    }).catch(error => {
+      next(error)
+    })
+}
 
 
 
@@ -158,5 +186,7 @@ module.exports = {
     forgotPwd: forgotPwd,
     resetPwd: resetPwd,
     emailExist: emailExist,
-    verfiyPIN: verfiyPIN
+    verfiyPIN: verfiyPIN,
+    fetchAddress: fetchAddress,
+    saveAddressBookDetail: saveAddressBookDetail
 }

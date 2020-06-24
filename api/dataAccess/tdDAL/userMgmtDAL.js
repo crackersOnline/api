@@ -217,6 +217,77 @@ function emailExist ( request) {
   })
 }
 
+function fetchAddress(request) {
+  return new Promise((resolve, reject) => {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.buildFetcAddressQuery(request)
+        console.log('fetchAddress', dbQuery);
+        pool.getConnection((err, connection) => {
+          if(err) {
+            reject(new DBError)
+          } 
+          if(connection) {
+            connection.query(dbQuery, function(err, row, fields) {
+              if(err) {
+                reject(new DBError)
+              } else {
+                var results = {
+                  recCount: row.length,
+                  data: row,
+                  dbErr: null
+                }
+                connection.destroy();
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch (error => {
+        reject(error)
+      })
+  })  
+}
+
+
+// Function is used to insert the user Address Detail
+function saveAddressBookDetail (request) {
+  return new Promise(function (resolve, reject) {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.buildAddressBookSaveQuery(request)
+        console.log('saveAddressBookDetail',dbQuery)
+        pool.getConnection((err, connection) => {
+          if (err) {
+            reject(new DBError(err))
+          }
+          if (connection) {
+            connection.query(dbQuery, function (err, rows, fields) {
+              // Connection is automatically released when query resolves
+              if (err) {
+                reject(new DBError(err))
+              } else {
+                console.log('rows', rows);
+                var results = {
+                  recCount: rows.affectedRows,
+                  data: rows,
+                  dbErr: null
+                }
+                connection.destroy()
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch(error => {
+        // console.log('create pool error')
+        reject(error)
+      })
+  })
+}
+
 
 module.exports = {
   fetchUsers: fetchUsers,
@@ -224,5 +295,7 @@ module.exports = {
   updateUser: updateUser,
   deleteUser: deleteUser,
   fetchUserByUserID: fetchUserByUserID,
-  emailExist: emailExist
+  emailExist: emailExist,
+  fetchAddress: fetchAddress,
+  saveAddressBookDetail: saveAddressBookDetail
 }

@@ -1,22 +1,25 @@
 'use strict'
-const productMgmtDAL = require('../dataAccess/tdDAL/productMgmtDAL')
+
+const transactionMgmtDAL = require('../dataAccess/tdDAL/transactionMgmtDAL')
 const DBError = require('../../common/exception/dbException')
 const commonHelper =  require('../helpers/common-helper')
 
 
 // This function gets all the list of the users
-async function tempCartSave (request) {
+async function orderSave (request) {
   try {
     var results = {}
     let userID =  await commonHelper.userID(request)
     if(userID) {
+      console.log('userID', userID);
      request.body.userID = userID;
     }
     var itemCheck = await productMgmtDAL.fetchCartItemByUser(request);
     if(itemCheck) {
+      console.log('itemCheck', itemCheck)
       if (itemCheck.recCount > 0) {
         if(request.body.productQuantity===0) {
-          results = await productMgmtDAL.buildSaveTempCart(request, 'DELETE')
+          results = await productMgmtDAL.buildSaveOrder(request, 'DELETE')
         } else {
           results = await productMgmtDAL.buildSaveTempCart(request, 'UPDATE')
         }
@@ -24,6 +27,7 @@ async function tempCartSave (request) {
         results = await productMgmtDAL.buildSaveTempCart(request, 'INSERT')
       }
       if (results) {
+        console.log('results', results);
         if (results.recCount > 0) {
         var result = {
             code:200,
@@ -50,6 +54,7 @@ async function fetchCartData (request) {
   try {
     let userID =  await commonHelper.userID(request)
     if(userID) {
+      console.log('userID', userID);
      request.body.userID = userID;
     }
     var results = await productMgmtDAL.fetchCartData(request)
@@ -73,8 +78,6 @@ async function fetchCartData (request) {
   }
 }
 
- 
- module.exports = {
-  tempCartSave : tempCartSave,
-  fetchCartData:fetchCartData
- }
+module.exports = {
+  orderSave: orderSave
+}

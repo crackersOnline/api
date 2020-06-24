@@ -2,7 +2,8 @@
 const userMgmtDAL = require('../dataAccess/tdDAL/userMgmtDAL')
 const _ = require('lodash')
 const DBError = require('../../common/exception/dbException')
-const helper = require('../helpers/mail.helper');
+const mailHelper = require('../helpers/mail.helper');
+const commonHelper = require('../helpers/common-helper');
 const bcrypt = require('bcrypt');
 
 // This function gets all the list of the users
@@ -26,7 +27,7 @@ async function fetchUsers (request) {
 
 
 const sendMail = (mailOptions) => {
-  helper.sendMailer(mailOptions, (err, data) => {
+  mailHelper.sendMailer(mailOptions, (err, data) => {
       if (err) {
       // console.log('err in userCOntroller', err);
       return err;
@@ -67,7 +68,7 @@ async function createUser (request) {
         subject: 'Registration activation PIN', // 'Subject of your email', // Subject line
         html: '<p> Your generated PIN '+ generatePIN + '</p>'// '<p>Your html here</p>'// plain text body
       };
-      const mailer = await helper.sendMailer(mailOptions)
+      const mailer = await mailHelper.sendMailer(mailOptions)
       if(mailer) {
         userDetail.userSave.userEmail = request.body.userEmail
         results = {
@@ -162,7 +163,7 @@ async function forgotPwd (request) {
               subject: 'Your Forgot password Reset PIN', // Subject line
               html: '<p>New password activation PIN '+ generatePIN +'</p>'// plain text body
             };
-            const mailer = await helper.sendMailer(mailOptions)
+            const mailer = await mailHelper.sendMailer(mailOptions)
             if(mailer) {
               results = {
                 code: 200,
@@ -210,7 +211,7 @@ async function resetPwd (request) {
         subject: 'Password Reset Sucessfully', // 'Subject of your email', // Subject line
         html: '<p>Password Reset Sucessfully</p>'// '<p>Your html here</p>'// plain text body
       };
-      const mailer = await helper.sendMailer(mailOptions)
+      const mailer = await mailHelper.sendMailer(mailOptions)
       if(mailer) {
         results = {
           code: 200,
@@ -309,6 +310,51 @@ async function verfiyPIN (request) {
   }
 }
 
+async function fetchAddress(request) {
+  try {
+    let userID =  await commonHelper.userID(request)
+    if(userID) {
+     request.body.userID = userID;
+    }
+    console.log('request.body.userID', request.body.userID);
+    var results = await userMgmtDAL.fetchAddress(request)
+    if(results) {
+      if(results.recCount > 0) {
+        return results
+      } else {
+        return { recCount: 0 }
+      }
+    } else {
+      throw new DBError('Data not found')
+    }
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+async function saveAddressBookDetail(request) {
+  try {
+    let userID =  await commonHelper.userID(request)
+    if(userID) {
+     request.body.userID = userID;
+    }
+    console.log('request.body.userID', request.body.userID);
+    var results = await userMgmtDAL.saveAddressBookDetail(request)
+    if(results) {
+      if(results.recCount > 0) {
+        return results
+      } else {
+        return { recCount: 0 }
+      }
+    } else {
+      throw new DBError('Data not found')
+    }
+  }
+  catch (error) {
+    throw error
+  }
+}
 module.exports = {
   fetchUsers: fetchUsers,
   createUser: createUser,
@@ -318,5 +364,7 @@ module.exports = {
   forgotPwd: forgotPwd,
   resetPwd: resetPwd,
   emailExist: emailExist,
-  verfiyPIN:verfiyPIN
+  verfiyPIN:verfiyPIN,
+  fetchAddress: fetchAddress,
+  saveAddressBookDetail: saveAddressBookDetail
 }

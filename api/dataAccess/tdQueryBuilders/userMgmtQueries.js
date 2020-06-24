@@ -73,10 +73,57 @@ const buildfetchEmailFromUsers = (req) => {
   return query;
 }
 
+const buildFetcAddressQuery = (req) => {
+  var query = "SELECT * FROM crackersdb.addressbook "
+  query += "WHERE userID= '" + req.body.userID +"' AND status='1'";
+  return query;
+}
+
+
+// This function is used to insert/update the users
+const buildAddressBookSaveQuery = (req) => {
+  var query = ''
+  if (req.body.type === 'INSERT') {
+    query += 'INSERT INTO crackersdb.addressbook( userID,addressType, flatNo, address, landmark, city, state, pincode, mobile, createdOn, updatedOn) VALUES '
+    query += ' ( '
+    query +="'" + req.body.userID + "',"
+    query += "'" + req.body.addressType + "',"
+    query += "'" + req.body.flatNo + "',"
+    query += "'" + req.body.address + "',"
+    query += "'" + req.body.landmark + "',"
+    query += "'" + req.body.city + "',"
+    query += "'" + req.body.state + "',"
+    query += "'" + req.body.pincode + "',"
+    query += "'" + req.body.mobile + "',"
+    query += "now(),"
+    query += "now() "
+    query += ' )'
+    return query
+  } else {
+    query += 'UPDATE crackersdb.addressbook '
+    query += 'SET '
+    query += 'userID = ' + "'" + req.body.userID + "'," 
+    query += (req.body.addressType ) ?  'addressType = ' + "'" + req.body.addressType + "'," : ''
+    query += (req.body.flatNo) ?  'flatNo = ' + "'" + req.body.flatNo + "'," : ''
+    query += (req.body.address)?  'address = ' + "'" + req.body.address + "'," : ''
+    query += (req.body.landmark) ? 'landmark = ' + "'" + req.body.landmark + "'," :''
+    query += (req.body.city ) ?  'city = ' + "'" + req.body.city + "'," : ''
+    query += (req.body.state) ?  'state = ' + "'" + req.body.state + "'," : ''
+    query += (req.body.pincode)?  'pincode = ' + "'" + req.body.pincode + "'," : ''
+    query += (req.body.mobile) ? 'mobile = ' + "'" + req.body.mobile + "'," :''
+    query += (req.body.status) ? 'status = ' + "'" + req.body.status + "'," :''
+    query += 'updatedOn =  ' + "now() "
+    query += ' WHERE userID = "' + req.body.userID + '" AND addressID = "'+ req.body.addressID + '"'
+    return query
+  }
+}
+
 module.exports = {
   buildfetchUserQuery: buildfetchUserQuery,
   buildUserSaveQuery: buildUserSaveQuery,
   buildUserStatusUpdateQuery: buildUserStatusUpdateQuery,
   buildfetchUserByUserIDQuery: buildfetchUserByUserIDQuery,
-  buildfetchEmailFromUsers: buildfetchEmailFromUsers
+  buildfetchEmailFromUsers: buildfetchEmailFromUsers,
+  buildFetcAddressQuery: buildFetcAddressQuery,
+  buildAddressBookSaveQuery: buildAddressBookSaveQuery
 }
