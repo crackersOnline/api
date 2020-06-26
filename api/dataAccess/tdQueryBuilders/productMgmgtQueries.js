@@ -99,6 +99,30 @@ const buildFetchCouponQuery = (req) => {
 }
 
 
+// This function is used to insert/update the users
+const buildSaveOrderQuery = (req, userAction) => {
+  var query = ''
+  if (userAction === 'INSERT') {
+    query += 'INSERT INTO crackersdb.order(orderProducts, orderDate, orderStatus, paymentMethod, paymentStatus, deliveryAddress, userID, cartAmount, couponApplied, orderDiscount, orderAmount, updatedOn) VALUES '
+    query += ' ( '
+    query += "'" + req.body.orderProducts + "',"
+    query += "CURDATE(),"
+    query += "'" + req.body.orderStatus + "',"
+    query += "'" + req.body.paymentMethod + "',"
+    query += "'" + req.body.paymentStatus + "',"
+    query += "'" + req.body.deliveryAddress + "',"
+    query += "'" + req.body.userID + "',"
+    query += "'" + req.body.cartAmount + "',"
+    query += "'" + req.body.couponApplied + "',"
+    query += "'" + req.body.orderDiscount + "',"
+    query += "'" + req.body.orderAmount + "',"
+    query += "now()"
+    query += ' )'
+    return query
+  }
+}
+
+
 module.exports = {
   buildFetchProductsQuery: buildFetchProductsQuery,
   buildFetchCategoriesQuery: buildFetchCategoriesQuery,
@@ -106,5 +130,6 @@ module.exports = {
   buildfetchCartItemByUserQuery: buildfetchCartItemByUserQuery,
   buildTempCartSaveQuery: buildTempCartSaveQuery,
   buildFetchCartDataQuery: buildFetchCartDataQuery,
-  buildFetchCouponQuery: buildFetchCouponQuery
+  buildFetchCouponQuery: buildFetchCouponQuery,
+  buildSaveOrderQuery: buildSaveOrderQuery
 }

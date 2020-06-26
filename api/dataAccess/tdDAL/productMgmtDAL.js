@@ -293,6 +293,47 @@ function fetchCoupon (request) {
 }
 
 
+
+// Function is used to insert the user
+function buildSaveOrder (request, type) {
+  console.log('type', type)
+  return new Promise(function (resolve, reject) {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.buildSaveOrderQuery(request, type)
+         console.log('buildSaveOrder',dbQuery)
+        pool.getConnection((err, connection) => {
+          if (err) {
+            console.log('DBError',err)
+            reject(new DBError(err))
+          }
+          if (connection) {
+            connection.query(dbQuery, function (err, rows, fields) {
+              // Connection is automatically released when query resolves
+              if (err) {
+                console.log('syntax',err)
+                reject(new DBError(err))
+              } else {
+                var results = {
+                  userSave: rows,
+                  dbErr: null,
+                  recCount: rows.affectedRows
+                }
+                connection.destroy()
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch(error => {
+         console.log('create pool error')
+        reject(error)
+      })
+  })
+}
+
+
 module.exports = {
   getProducts: getProducts,
   fetchCategories: fetchCategories,
@@ -301,5 +342,6 @@ module.exports = {
   buildSaveTempCart: buildSaveTempCart,
   fetchCartItemByUser: fetchCartItemByUser,
   fetchCartData: fetchCartData,
-  fetchCoupon : fetchCoupon
+  fetchCoupon : fetchCoupon,
+  buildSaveOrder: buildSaveOrder
 }

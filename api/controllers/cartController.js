@@ -54,9 +54,23 @@ const fetchCoupon = (request, response, next) => {
    })
  }
  
+ const saveOrder = (request, response, next) => {
+   cartMgmtService.saveOrder(request)
+    .then(results => {
+      if(results.recCount === 0) {
+        response.status(204).send(results)
+      } else {
+        response.status(200).send(results)
+      }
+    })
+    .catch(error => {
+      next(error)
+    })
+ }
 
 module.exports = {
   saveCart: saveCart,
   fetchCartData: fetchCartData,
-  fetchCoupon: fetchCoupon
+  fetchCoupon: fetchCoupon,
+  saveOrder: saveOrder
 }

@@ -97,8 +97,41 @@ async function fetchCoupon (request) {
     throw error
   }
 }
+
+
+// This function gets all the list of the users
+async function saveOrder(request) {
+  try {
+    var results = {}
+    let userID =  await commonHelper.userID(request)
+    if(userID) {
+     request.body.userID = userID;
+    }
+      results = await productMgmtDAL.buildSaveOrder(request, 'INSERT')
+      if (results) {
+        if (results.recCount > 0) {
+        var result = {
+            code:200,
+            data: results.userSave,
+            recCount: results.recCount
+        }
+          return result
+        } else {
+          return { recCount: 0 }
+        }
+      } else {
+        throw new DBError('Data not found')
+      }
+  } catch (error) {
+    // console.log('')
+    throw error
+  }
+}
+
+
  module.exports = {
   tempCartSave : tempCartSave,
   fetchCartData:fetchCartData,
-  fetchCoupon : fetchCoupon
+  fetchCoupon : fetchCoupon,
+  saveOrder: saveOrder
  }

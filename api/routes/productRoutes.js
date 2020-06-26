@@ -18,4 +18,7 @@ router.route('/getCartData')
 router.route('/getCoupon')
     .post(cartController.fetchCoupon)
 
+router.route('/orderSave')
+    .post(cartController.saveOrder)
+
 module.exports = router;
