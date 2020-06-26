@@ -148,3 +148,4 @@ ALTER TABLE `crackersdb`.`cart` CHANGE COLUMN `productQty` `productQty` INT NULL
 ALTER TABLE `crackersdb`.`addressbook` ADD COLUMN `addressType` VARCHAR(45) NULL  AFTER `userID` , ADD COLUMN `flatNo` VARCHAR(45) NULL  AFTER `addressType` , ADD COLUMN `landmark` VARCHAR(45) NULL  AFTER `address` ;
 ALTER TABLE `crackersdb`.`addressbook` CHANGE COLUMN `status` `status` INT(11) NULL DEFAULT 1  ;
 
+ALTER TABLE `crackersdb`.`coupon` CHANGE COLUMN `vaildOn` `validOn` DATETIME NULL DEFAULT NULL  ;

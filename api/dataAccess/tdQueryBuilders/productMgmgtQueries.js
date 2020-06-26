@@ -91,6 +91,13 @@ const buildFetchCartDataQuery = (req) => {
   return query
 }
 
+const buildFetchCouponQuery = (req) => {
+  var query = "SELECT couponID, couponCode, couponValue FROM crackersdb.coupon "
+  query += "WHERE couponCode = '"+req.body.couponCode+"' " 
+  query += "AND validOn > now()"
+  return query;
+}
+
 
 module.exports = {
   buildFetchProductsQuery: buildFetchProductsQuery,
@@ -98,5 +105,6 @@ module.exports = {
   buildProductSaveQuery: buildProductSaveQuery,
   buildfetchCartItemByUserQuery: buildfetchCartItemByUserQuery,
   buildTempCartSaveQuery: buildTempCartSaveQuery,
-  buildFetchCartDataQuery: buildFetchCartDataQuery
+  buildFetchCartDataQuery: buildFetchCartDataQuery,
+  buildFetchCouponQuery: buildFetchCouponQuery
 }
