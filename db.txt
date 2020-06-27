@@ -149,3 +149,4 @@ ALTER TABLE `crackersdb`.`addressbook` ADD COLUMN `addressType` VARCHAR(45) NULL
 ALTER TABLE `crackersdb`.`addressbook` CHANGE COLUMN `status` `status` INT(11) NULL DEFAULT 1  ;
 
 ALTER TABLE `crackersdb`.`coupon` CHANGE COLUMN `vaildOn` `validOn` DATETIME NULL DEFAULT NULL  ;
+ALTER TABLE `crackersdb`.`order` CHANGE COLUMN `orderProducts` `orderProducts` TEXT NULL DEFAULT NULL  ;

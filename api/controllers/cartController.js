@@ -37,14 +37,13 @@ const fetchCartData = (request, response, next) => {
 }
 
 const fetchCoupon = (request, response, next) => {
-   console.log('fetchCoupon', request.body)
    cartMgmtService.fetchCoupon(request)
      .then(results => {
-        console.log('saveCart', results)
        if (results.recCount === 0) {
+        results.code = 202;
          console.log('User Details', responseMessages.noDataFound)
-        // infoLogger.logInfo('User Details', request.body, responseMessages.noDataFound)
-         response.status(204).send(results)
+         infoLogger.logInfo('User Details', request.body, responseMessages.noDataFound)
+         response.status(202).send(results)
        } else {
          response.status(200).send(results)
        }
