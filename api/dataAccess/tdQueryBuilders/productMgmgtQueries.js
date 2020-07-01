@@ -1,9 +1,16 @@
 'use strict'
 
+const getList = (req) => {
+  const data = req.map(item => item.productID).join(',');
+  console.log('data', data);
+  return data;
+}
+
 // This function returns query to get all the demos based on programId for a given date from teradata
 const buildFetchProductsQuery = (req) => {
   var query = "SELECT productID, product.categoryID as categoryID, categoryName, productName, productMRP, productPrice, productDescription, Product.status as productStatus, 0 as productQuantity from product inner join category on Category.categoryID=product.categoryID AND Category.status =1 where Product.status = 1 ORDER BY Category.categoryID ASC"
-  return query
+ // var query = "SELECT * from crackersdb.order"; 
+ return query
 }
 
 // This function returns query to get all the demos based on programId for a given date from teradata
@@ -74,9 +81,14 @@ const buildTempCartSaveQuery = (req, userAction) => {
     query += 'updatedOn =  ' + "now() "
     query += ' WHERE userID =' + "'" + req.body.userID + "' AND productID ='" + req.body.productID + "' AND userOrderStatus = '0'"
     return query
-  } else {
+  } else if(userAction === 'DELETE') {
     query += 'DELETE FROM crackersdb.cart '
-    query += ' WHERE userID =' + "'" + req.body.userID + "' AND productID ='" + req.body.productID + "' AND userOrderStatus = '0'"
+    query += ' WHERE userID =' + "'" + req.body.userID + "' AND productID = " + req.body.productID + " AND userOrderStatus = '0'"
+    return query
+  } else {
+    req.body.productID = getList(req.body.orderProducts)
+    query += 'DELETE FROM crackersdb.cart '
+    query += ' WHERE userID =' + "'" + req.body.userID + "' AND productID IN (" + req.body.productID + ") AND userOrderStatus = '0'"
     return query
   }
 }
@@ -84,7 +96,6 @@ const buildTempCartSaveQuery = (req, userAction) => {
 
 // This function returns query to get all the demos based on programId for a given date from teradata
 const buildFetchCartDataQuery = (req) => {
-  console.log('req.body.productID', req.body);
   var query = "SELECT c.productID, c.productName, c.categoryID, c.categoryName, c.productQty as productQuantity, p.productPrice, p.productMRP,  (c.productQty * p.productPrice) as productTtlQtyPrice "
   query += " FROM crackersdb.cart as c INNER JOIN crackersdb.product as p on p.productID=c.productID "
   query += "WHERE userID = '"+ req.body.userID +"' AND userOrderStatus='0' "
@@ -101,11 +112,12 @@ const buildFetchCouponQuery = (req) => {
 
 // This function is used to insert/update the users
 const buildSaveOrderQuery = (req, userAction) => {
+  console.log('buildSaveOrderQuery - req.body.productID', req.body.orderProducts);
   var query = ''
   if (userAction === 'INSERT') {
     query += 'INSERT INTO crackersdb.order(orderProducts, orderDate, orderStatus, paymentMethod, paymentStatus, deliveryAddress, userID, cartAmount, couponApplied, orderDiscount, orderAmount, updatedOn) VALUES '
     query += ' ( '
-    query += "'" + req.body.orderProducts + "',"
+    query += "'" + JSON.stringify(req.body.orderProducts) + "',"
     query += "CURDATE(),"
     query += "'" + req.body.orderStatus + "',"
     query += "'" + req.body.paymentMethod + "',"

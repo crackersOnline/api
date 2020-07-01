@@ -185,7 +185,6 @@ function buildSaveTempCart (request, type) {
 
 
 function fetchCartItemByUser (request) {
-  console.log('DAL', request)
   return new Promise(function (resolve, reject) {
     db.createPool()
       .then(pool => {
@@ -292,42 +291,65 @@ function fetchCoupon (request) {
   })
 }
 
-
-
-// Function is used to insert the user
+// Function is used to Transaction Queries - insert the orders, remove cart session
 function buildSaveOrder (request, type) {
   console.log('type', type)
   return new Promise(function (resolve, reject) {
     db.createPool()
       .then(pool => {
-        var dbQuery = buildQuery.buildSaveOrderQuery(request, type)
-         console.log('buildSaveOrder',dbQuery)
+        var db1Query = buildQuery.buildSaveOrderQuery(request, type)
+        var db2Query = buildQuery.buildTempCartSaveQuery(request, 'REMOVE')
+         console.log('buildSaveOrder db1Query',db1Query)
+         console.log('buildSaveOrder db2Query',db2Query)
         pool.getConnection((err, connection) => {
           if (err) {
             console.log('DBError',err)
             reject(new DBError(err))
           }
           if (connection) {
-            connection.query(dbQuery, function (err, rows, fields) {
-              // Connection is automatically released when query resolves
-              if (err) {
-                console.log('syntax',err)
+            connection.beginTransaction(function(err) {
+              if(err) {
                 reject(new DBError(err))
-              } else {
-                var results = {
-                  userSave: rows,
-                  dbErr: null,
-                  recCount: rows.affectedRows
-                }
-                connection.destroy()
-                resolve(results)
+              }
+              connection.query(db1Query, function (err, rows, fields) {
+                if (err) {
+                  connection.rollback(function(){
+                    console.log('syntax',err)
+                    reject(new DBError(err))
+                  })
+                } else {
+                  var results = {
+                    userSave: rows,
+                    dbErr: null,
+                    recCount: rows.affectedRows
+                  }
+                  connection.query(db2Query, function (err, rows, fields) {
+                    if (err) {
+                      connection.rollback(function() {
+                        console.log('syntax',err)
+                        reject(new DBError(err))
+                      })
+                    } 
+                    connection.commit(function(err) {
+                      if(err) {
+                        connection.rollback(function() {
+                          reject(new DBError(err))
+                        })
+                      }
+                      console.log('Transaction completed')
+                      connection.destroy()
+                      resolve(results)
+                    })
+
+                })
               }
             })
-          }
-        })
+          })
+        }
+      })
       })
       .catch(error => {
-         console.log('create pool error')
+         console.log('create pool error', error)
         reject(error)
       })
   })
