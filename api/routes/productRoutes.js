@@ -20,5 +20,8 @@ router.route('/getCoupon')
 
 router.route('/orderSave')
     .post(cartController.saveOrder)
+    
+router.route('/captcha')
+    .get(productController.generateCaptcha)
 
 module.exports = router;

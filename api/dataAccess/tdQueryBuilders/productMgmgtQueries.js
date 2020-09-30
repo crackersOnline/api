@@ -103,9 +103,9 @@ const buildFetchCartDataQuery = (req) => {
 }
 
 const buildFetchCouponQuery = (req) => {
-  var query = "SELECT couponID, couponCode, couponValue FROM crackersdb.coupon "
+  var query = "SELECT couponID, couponCode, couponValue, validOn FROM crackersdb.coupon "
   query += "WHERE couponCode = '"+req.body.couponCode+"' " 
-  query += "AND validOn > now()"
+  // query += "AND validOn > now()"
   return query;
 }
 

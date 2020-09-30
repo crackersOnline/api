@@ -1,6 +1,7 @@
 'use strict';
 const lodash = require('lodash')
 const productMgmtService = require("../services/productMgmtService")
+const svgCaptcha = require('svg-captcha')
 
 
 const fetchProducts = (request, response, next) => {
@@ -33,7 +34,22 @@ const fetchCategories = (request, response, next) => {
       })
 }
 
+const generateCaptcha = (request, response, next) => {
+  // const expr = random.mathExpr();
+  // const text = expr.text; const data = createCaptcha(expr.equation, options); return {text, data};
+  const Options = {
+    width:"105"
+  }
+  var captcha = svgCaptcha.create(Options);
+  // captcha = svgCaptcha(captcha,Options);
+  // request.session.captcha = captcha.text;
+  // response.type('jpg');
+  console.log('captcha');
+  response.status(200).send(captcha)
+}
+
 module.exports = {
     productList: fetchProducts,
-    categoryList: fetchCategories
+    categoryList: fetchCategories,
+    generateCaptcha: generateCaptcha
 }
