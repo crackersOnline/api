@@ -8,7 +8,7 @@ const getList = (req) => {
 
 // This function returns query to get all the demos based on programId for a given date from teradata
 const buildFetchProductsQuery = (req) => {
-  var query = "SELECT productID, product.categoryID as categoryID, categoryName, productName, productMRP, productPrice, productDescription, Product.status as productStatus, 0 as productQuantity from product inner join category on Category.categoryID=product.categoryID AND Category.status =1 where Product.status = 1 ORDER BY Category.categoryID ASC"
+  var query = "SELECT productID, product.categoryID as categoryID, categoryName, productName, productMRP, productPrice, productDescription, Product.status as productStatus, 0 as productQuantity, noOfItems from product inner join category on Category.categoryID=product.categoryID AND Category.status =1 where Product.status = 1 ORDER BY Category.categoryID ASC"
  // var query = "SELECT * from crackersdb.order"; 
  return query
 }
