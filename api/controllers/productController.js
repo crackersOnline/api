@@ -7,8 +7,9 @@ const svgCaptcha = require('svg-captcha')
 const fetchProducts = (request, response, next) => {
     productMgmtService.getProducts(request)
       .then(results => {
+        console.log('controller', results);
         if (results.recCount === 0) {
-          infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
+          infoLogger.logInfo('Product Details', request, responseMessages.noDataFound)
           response.status(204).send(responseMessages.noDataFound)
         } else {
           response.status(200).send(results)
@@ -23,7 +24,7 @@ const fetchCategories = (request, response, next) => {
     productMgmtService.getCategories(request)
     .then(results => {
       if (results.recCount === 0) {
-          infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
+          infoLogger.logInfo('Categories Details', request, responseMessages.noDataFound)
           response.status(204).send(responseMessages.noDataFound)
       } else {
           response.status(200).send(results)

@@ -6,6 +6,8 @@ const DBError = require('../../common/exception/dbException')
 // This function gets all the list of the users
 async function getProducts (request) {
   try {
+    
+    console.log('controller', request.body);
     var results = await productMgmtDAL.getProducts(request)
     if (results) {
       if (results.recCount > 0) {
@@ -26,7 +28,7 @@ async function getProducts (request) {
       throw new DBError('Data not found')
     }
   } catch (error) {
-    // console.log('')
+     console.log('error', error);
     throw error
   }
 }

@@ -4,6 +4,7 @@ const expressJwt = require("express-jwt")
 const expressValidator = require('express-validator')
 const userRoutes = require("./api/routes/userRoutes.js")
 const productRoutes = require("./api/routes/productRoutes.js")
+const myaccountRoutes = require("./api/routes/myaccountRoutes.js")
 
 const helmet = require('helmet')
 const validatorAndSanitizer = require('./api/validators/sanitizers_and_validators.js')
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 // app.use(authenticateToken);
 app.use("/api/user", userRoutes)
 app.use("/api/product", productRoutes)
+app.use("/api/myaccount", myaccountRoutes)
 
 // global error handler
  app.use(errorHandler);

@@ -16,10 +16,12 @@ const fetchUsers = (request, response, next) => {
           infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
           response.status(204).send(responseMessages.noDataFound)
         } else {
+          console.log('result', results);
           response.status(200).send(results)
         }
       })
       .catch(error => {
+        console.log('controller error', error);
         next(error)
       })
   }
@@ -33,7 +35,8 @@ const fetchUsers = (request, response, next) => {
           infoLogger.logInfo('User Mgmt - Insert', request, responseMessages.noDataFound)
           response.status(204).send(responseMessages.noDataFound)
         } else {
-          response.status(results.code).send(results)
+
+          response.status(200).send(results)
         }
       })
       .catch(error => {

@@ -8,7 +8,7 @@ const buildfetchUserByColumnQuery = (req, type) => {
   } else if(type === "userID") {
     whereQuery = "userID = '" + req.body.userID + "'"
   }
-  let query = "SELECT * FROM crackersdb.users WHERE " + whereQuery;
+  let query = "SELECT userID, userName, userMobile, userAddress, userCity, userState, userPincode, userEmail, userStatus, userRole, password FROM crackersdb.users WHERE " + whereQuery;
   return query
 }
 

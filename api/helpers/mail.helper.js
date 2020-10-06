@@ -1,12 +1,21 @@
 
 var nodemailer = require('nodemailer');
 
-var transporter =  nodemailer.createTransport({
-  service: process.env.MAILER_SERVICE,
+var transporter = nodemailer.createTransport({
+ /*  service: process.env.MAILER_SERVICE,
   auth: {
     user: process.env.MAILER_USERNAME,
     pass:  process.env.MAILER_PASSWORD
-  }
+  } */
+  service: 'gmail',//smtp.gmail.com  //in place of service use host...
+    secure: false,//true
+    port: 25,//465
+    auth: {
+      user: 'santusend@gmail.com',
+      pass: 'dellbell',
+    }, tls: {
+      rejectUnauthorized: false
+    }
 })
 
 
@@ -24,6 +33,34 @@ const sendMailer = (mailOptions) => {
    
 }
 
+/*
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: false,
+  auth: {
+    user: // mailtrap.io username
+    pass: // mailtrap.io password
+  }
+}); */
+
+const Email = require('email-templates');
+
+const mail = new Email({
+  transport: transporter,
+  send: true,
+  preview: false,
+  /* views: {
+    options: {
+      extension: 'pug'
+    },
+    root: 'emailTemplates/',
+  }, */
+
+});
+
+
 module.exports = {
-  sendMailer: sendMailer
+  sendMailer: sendMailer,
+  mail: mail
 }

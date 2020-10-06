@@ -57,10 +57,11 @@ async function createUser (request) {
     // console.log('checkEmailExist',checkEmailExist);
     if(checkEmailExist.recCount > 0) {
       userDetail  = await userMgmtDAL.updateUser(request)
+      // console.log('checkEmailExist', request.body)
     } else {
       userDetail = await userMgmtDAL.createUser(request)
+     // console.log('checkEmailNonExist ', request.body)
     }
-
     if (userDetail) {
       const mailOptions = {
         from: process.env.MAILER_SENDERADD, // sender address
@@ -68,23 +69,44 @@ async function createUser (request) {
         subject: 'Registration activation PIN', // 'Subject of your email', // Subject line
         html: '<p> Your generated PIN '+ generatePIN + '</p>'// '<p>Your html here</p>'// plain text body
       };
-      const mailer = await mailHelper.sendMailer(mailOptions)
-      if(mailer) {
-        userDetail.userSave.userEmail = request.body.userEmail
+   //   const mailer = await mailHelper.sendMailer(mailOptions);
+
+   console.log('mailer func')
+      const mailer = await mailHelper.mail.send({
+  template: 'activationUser',
+  message: {
+    from: 'santusend@gmail.com',
+    // to: 'laila.mathar@gmail.com'
+    to:request.body.userEmail    
+  },
+  locals: {
+    fname: 'Moor',
+    lname: 'Santu',
+    generatePIN: generatePIN,
+    userEmailID:request.body.userEmail
+  }
+})
+        
+        if(mailer) {
+          console.log('email has been send');
+          userDetail.userSave.userEmail = request.body.userEmail
         results = {
           code: 200,
           data: userDetail.userSave,
           recCount: userDetail.userSave.affectedRows
         }
+        console.log('result', results);
         return results;
+        } else {
+          console.log('Mail not sent');
+          throw new DBError('Mail not sent')
+        }
       } else {
-        throw new DBError('Mail not sent')
-      }
-      } else {
+        console.log('data not found')
         throw new DBError('Data not found')
       }
   } catch (error) {
-    // console.log(error)
+     console.log(error)
     throw error
   }
 }

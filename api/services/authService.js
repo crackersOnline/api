@@ -45,11 +45,13 @@ async function loginUser (request) {
     if (results) {
       // console.log('result', results);
       if (results.recCount > 0) {
-        const userDetails = results.users[0]
+        const userDetails = results.users[0];
+        console.log('userDetails', userDetails.userID);
         const comparisionPwd = await bcrypt.compare(password, userDetails.password);
         if(comparisionPwd) {
+          console.log('comparisionPwd', comparisionPwd);
           var token = jwt.sign({userID: userDetails.userID}, process.env.SECRET_KEY, { expiresIn: '1h' });
-          // console.log('results.userName', userDetails.userName);
+           console.log('results.userName', userDetails.userName);
           const result = {
             userName: userDetails.userName,
             userEmail:userDetails.userEmail,
@@ -57,6 +59,7 @@ async function loginUser (request) {
             code: 200,
             recCount: results.recCount
           }
+          console.log('result', result)
         return result
         } else {
           const result = {
@@ -64,6 +67,7 @@ async function loginUser (request) {
             message: "EmailId and Password does not match",
             recCount: results.recCount
           }
+          console.log(result)
           return result
         }
       } else {
@@ -72,13 +76,15 @@ async function loginUser (request) {
           message: "UnAuthorized User",
           recCount: 0
         }
+        console.log(result)
         return result
       }
     } else {
+      console.log('Data not found')
       throw new DBError('Data not found')
     }
   } catch (error) {
-    // console.log('')
+     console.log('error', error)
     throw error
   }
 }

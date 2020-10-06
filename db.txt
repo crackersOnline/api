@@ -150,3 +150,6 @@ ALTER TABLE `crackersdb`.`addressbook` CHANGE COLUMN `status` `status` INT(11) N
 
 ALTER TABLE `crackersdb`.`coupon` CHANGE COLUMN `vaildOn` `validOn` DATETIME NULL DEFAULT NULL  ;
 ALTER TABLE `crackersdb`.`order` CHANGE COLUMN `orderProducts` `orderProducts` TEXT NULL DEFAULT NULL  ;
+
+ALTER TABLE `crackersdb`.`product` 
+ADD COLUMN `noOfItems` INT NULL AFTER `productPrice`;
