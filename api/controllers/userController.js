@@ -17,7 +17,7 @@ const fetchUsers = (request, response, next) => {
           response.status(204).send(responseMessages.noDataFound)
         } else {
           console.log('result', results);
-          response.status(200).send(results)
+          response.status(results.code).send(results)
         }
       })
       .catch(error => {
@@ -36,7 +36,7 @@ const fetchUsers = (request, response, next) => {
           response.status(204).send(responseMessages.noDataFound)
         } else {
 
-          response.status(200).send(results)
+          response.status(results.code).send(results)
         }
       })
       .catch(error => {
@@ -157,7 +157,7 @@ const fetchAddress = (request, response, next) => {
         infoLogger.logInfo('User Mgmt - Delete', request, responseMessages.noDataFound)
         response.status(204).send(responseMessages.noDataFound)
       } else {
-        response.status(200).send(results)
+        response.status(results.code).send(results)
       }
     })
     .catch(error => {
@@ -172,7 +172,7 @@ const saveAddressBookDetail = (request, response, next) => {
         infoLogger.logInfo('User Mgmt - Delete', request, responseMessages.noDataFound)
         response.status(204).send(responseMessages.noDataFound)
       } else {
-        response.status(200).send(results)
+        response.status(results.code).send(results)
       }
     }).catch(error => {
       next(error)

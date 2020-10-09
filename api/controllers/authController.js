@@ -10,7 +10,7 @@ const verifyToken = (request, response, next) => {
         infoLogger.logInfo('User Details', request, responseMessages.noDataFound)
         response.status(204).send(responseMessages.noDataFound)
       } else {
-        response.status(200).send(results)
+        response.status(results.code).send(results)
       }
     })
     .catch(error => {
@@ -26,7 +26,7 @@ const loginUser = (request, response, next) => {
         response.status(results.code).send(results)
       } else {
         console.log('results from controller', results);
-        response.status(200).send(results)
+        response.status(results.code).send(results)
       } 
       //response.status(results.code).send(results)
     })

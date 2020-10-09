@@ -32,7 +32,24 @@ const fetchMyOrders = (request, response, next) => {
     })
   }
 
+  
+const fetchDeliveryAddressByID = (request, response, next) => {
+  myaccountService.fetchDeliveryAddressByID(request)
+    .then(results => {
+      if (results.recCount === 0) {
+        infoLogger.logInfo('Fetch Delivery Address', request.body, responseMessages.noDataFound)
+        response.status(204).send(responseMessages.noDataFound)
+      } else {
+        response.status(200).send(results)
+      }
+    })
+    .catch(error => {
+      next(error)
+  })
+}
+
   module.exports = {
     fetchMyprofile: fetchMyprofile,
-    fetchMyOrders: fetchMyOrders
+    fetchMyOrders: fetchMyOrders,
+    fetchDeliveryAddressByID: fetchDeliveryAddressByID
   }

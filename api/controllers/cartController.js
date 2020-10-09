@@ -54,18 +54,21 @@ const fetchCoupon = (request, response, next) => {
  }
  
  const saveOrder = (request, response, next) => {
+  request.body.orderRefID = 'CO#' + Math.floor(Math.random()*90000) + 10000;
    cartMgmtService.saveOrder(request)
     .then(results => {
       if(results.recCount === 0) {
         response.status(204).send(results)
       } else {
+        results.data.orderAmount =  request.body.orderAmount;
+        results.data.orderRefID = request.body.orderRefID;
         response.status(200).send(results)
       }
-    })
-    .catch(error => {
+    }).catch(error => {
       next(error)
     })
  }
+
 
 module.exports = {
   saveCart: saveCart,

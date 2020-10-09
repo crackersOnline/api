@@ -63,33 +63,21 @@ async function createUser (request) {
      // console.log('checkEmailNonExist ', request.body)
     }
     if (userDetail) {
-      const mailOptions = {
-        from: process.env.MAILER_SENDERADD, // sender address
-        to: request.body.userEmail, // list of receivers
-        subject: 'Registration activation PIN', // 'Subject of your email', // Subject line
-        html: '<p> Your generated PIN '+ generatePIN + '</p>'// '<p>Your html here</p>'// plain text body
-      };
-   //   const mailer = await mailHelper.sendMailer(mailOptions);
-
-   console.log('mailer func')
       const mailer = await mailHelper.mail.send({
-  template: 'activationUser',
-  message: {
-    from: 'santusend@gmail.com',
-    // to: 'laila.mathar@gmail.com'
-    to:request.body.userEmail    
-  },
-  locals: {
-    fname: 'Moor',
-    lname: 'Santu',
-    generatePIN: generatePIN,
-    userEmailID:request.body.userEmail
-  }
-})
-        
-        if(mailer) {
-          console.log('email has been send');
-          userDetail.userSave.userEmail = request.body.userEmail
+      template: 'activationUser',
+      message: {
+        from: process.env.MAILER_SENDERADD,
+        to:request.body.userEmail    
+      },
+      locals: {
+        fname: 'Moor',
+        lname: 'Santu',
+        generatePIN: generatePIN,
+        userEmailID:request.body.userEmail
+      }
+    })
+    if(mailer) {
+        userDetail.userSave.userEmail = request.body.userEmail
         results = {
           code: 200,
           data: userDetail.userSave,
@@ -169,7 +157,7 @@ async function forgotPwd (request) {
       request.body.userStatus = 'Active'
       let checkEmailExist = await userMgmtDAL.emailExist(request)
       if(!checkEmailExist) { 
-        // console.log('!checkEmailExist', !checkEmailExist);
+         console.log('!checkEmailExist', !checkEmailExist);
         throw new DBError('Data not found')
       } else {
         if(checkEmailExist.recCount> 0) {
@@ -179,6 +167,7 @@ async function forgotPwd (request) {
           //request.body.userStatus =  'Inactive'
           let userSave = await userMgmtDAL.updateUser(request)
           if(userSave) {
+            /*
             const mailOptions = {
               from: process.env.MAILER_SENDERADD, // sender address
               to: request.body.userEmail, // list of receivers
@@ -186,6 +175,19 @@ async function forgotPwd (request) {
               html: '<p>New password activation PIN '+ generatePIN +'</p>'// plain text body
             };
             const mailer = await mailHelper.sendMailer(mailOptions)
+          */
+          const mailer = await mailHelper.mail.send({
+            template: 'forgotPassword',
+            message: {
+              from: process.env.MAILER_SENDERADD,
+              to:request.body.userEmail    
+            },
+            locals: {
+              generatePIN: generatePIN,
+              userEmailID:request.body.userEmail
+            }
+          })
+
             if(mailer) {
               results = {
                 code: 200,
@@ -203,13 +205,13 @@ async function forgotPwd (request) {
             message: "Email ID does not exist",
             recCount: checkEmailExist.recCount
           }
-          // console.log('checkEmailExist 0', results);
+           console.log('checkEmailExist 0', results);
           return results;
         }
       }
   }
     catch (error) {
-      // console.log(error)
+       console.log(error)
       throw error
     }
   }
@@ -227,13 +229,23 @@ async function resetPwd (request) {
 
     var data = await userMgmtDAL.updateUser(request)
     if (data) {
-      const mailOptions = {
+    /*   const mailOptions = {
         from: process.env.MAILER_SENDERADD, // sender address
         to: request.body.userEmail, // list of receivers
         subject: 'Password Reset Sucessfully', // 'Subject of your email', // Subject line
         html: '<p>Password Reset Sucessfully</p>'// '<p>Your html here</p>'// plain text body
       };
-      const mailer = await mailHelper.sendMailer(mailOptions)
+      const mailer = await mailHelper.sendMailer(mailOptions) */
+      const mailer = await mailHelper.mail.send({
+        template: 'resetPassword',
+        message: {
+          from: process.env.MAILER_SENDERADD,
+          to:request.body.userEmail    
+        },
+        locals: {
+          userEmailID:request.body.userEmail
+        }
+      })
       if(mailer) {
         results = {
           code: 200,
@@ -248,7 +260,7 @@ async function resetPwd (request) {
         throw new DBError('Data not found')
       }
   } catch (error) {
-    // console.log(error)
+     console.log(error)
     throw error
   }
 }
@@ -262,6 +274,7 @@ async function emailExist (request) {
     // console.log('emailExist - service', results);
     if (results) {
       if (results.recCount > 0) {
+        results.code = 200;
         return results
       } else {
         return { recCount: 0 }
@@ -299,6 +312,17 @@ async function verfiyPIN (request) {
             userEmail: request.body.userEmail
           }
           // console.log('request', request.body)
+          const mailer = await mailHelper.mail.send({
+            template: 'accountCreated',
+            message: {
+              from: process.env.MAILER_SENDERADD,
+              to:request.body.userEmail    
+            },
+            locals: {
+              userEmailID: request.body.userEmail
+            }
+          })
+          if(mailer) {
           await userMgmtDAL.updateUser(request);
           result = {
               code: 200,
@@ -306,6 +330,9 @@ async function verfiyPIN (request) {
               recCount: results.recCount
           }
           return result;
+        }else {
+          throw new DBError('Mail not sent')
+        }
         } else {
           result = {
             code: 409,
@@ -327,7 +354,7 @@ async function verfiyPIN (request) {
     }
   }
   catch (error) {
-    // console.log(error)
+     console.log(error)
     throw error
   }
 }
@@ -342,6 +369,7 @@ async function fetchAddress(request) {
     var results = await userMgmtDAL.fetchAddress(request)
     if(results) {
       if(results.recCount > 0) {
+        results.code = 200;
         return results
       } else {
         return { recCount: 0 }
@@ -365,6 +393,7 @@ async function saveAddressBookDetail(request) {
     var results = await userMgmtDAL.saveAddressBookDetail(request)
     if(results) {
       if(results.recCount > 0) {
+        results.code = 200;
         return results
       } else {
         return { recCount: 0 }
@@ -374,6 +403,7 @@ async function saveAddressBookDetail(request) {
     }
   }
   catch (error) {
+    console.log('error', error);
     throw error
   }
 }

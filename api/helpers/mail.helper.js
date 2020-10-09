@@ -1,5 +1,6 @@
 
 var nodemailer = require('nodemailer');
+var path = require('path')
 
 var transporter = nodemailer.createTransport({
  /*  service: process.env.MAILER_SERVICE,
@@ -7,12 +8,12 @@ var transporter = nodemailer.createTransport({
     user: process.env.MAILER_USERNAME,
     pass:  process.env.MAILER_PASSWORD
   } */
-  service: 'gmail',//smtp.gmail.com  //in place of service use host...
-    secure: false,//true
-    port: 25,//465
+  service: process.env.MAILER_SERVICE, // 'gmail',//smtp.gmail.com  //in place of service use host...
+    secure: process.env.MAILER_SECURE, //  false,//true
+    port: process.env.MAILER_PORT, // 25,//465
     auth: {
-      user: 'santusend@gmail.com',
-      pass: 'dellbell',
+      user: process.env.MAILER_USERNAME,
+      pass:  process.env.MAILER_PASSWORD,
     }, tls: {
       rejectUnauthorized: false
     }
@@ -33,17 +34,6 @@ const sendMailer = (mailOptions) => {
    
 }
 
-/*
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: false,
-  auth: {
-    user: // mailtrap.io username
-    pass: // mailtrap.io password
-  }
-}); */
-
 const Email = require('email-templates');
 
 const mail = new Email({
@@ -55,7 +45,14 @@ const mail = new Email({
       extension: 'pug'
     },
     root: 'emailTemplates/',
-  }, */
+  }, 
+  juiceResources: {
+    preserveImportant: true,
+    webResources: {
+      relativeTo: path.resolve('build'),
+      images: true // <--- set this as `true`
+    }
+  }*/
 
 });
 

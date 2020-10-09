@@ -8,7 +8,7 @@ const getList = (req) => {
 
 // This function returns query to get all the demos based on programId for a given date from teradata
 const buildFetchProductsQuery = (req) => {
-  var query = "SELECT productID, product.categoryID as categoryID, categoryName, productName, productMRP, productPrice, productDescription, Product.status as productStatus, 0 as productQuantity, noOfItems from product inner join category on Category.categoryID=product.categoryID AND Category.status =1 where Product.status = 1 ORDER BY Category.categoryID ASC"
+  var query = "SELECT productID, product.categoryID as categoryID, categoryName, productName, productMRP, productPrice, productDescription, Product.status as productStatus, 0 as productQuantity, noOfItems, customerPercentage, productImage from product inner join category on Category.categoryID=product.categoryID AND Category.status =1 where Product.status = 1 ORDER BY Category.categoryID ASC"
  // var query = "SELECT * from crackersdb.order"; 
  return query
 }
@@ -115,8 +115,9 @@ const buildSaveOrderQuery = (req, userAction) => {
   console.log('buildSaveOrderQuery - req.body.productID', req.body.orderProducts);
   var query = ''
   if (userAction === 'INSERT') {
-    query += 'INSERT INTO crackersdb.order(orderProducts, orderDate, orderStatus, paymentMethod, paymentStatus, deliveryAddress, userID, cartAmount, couponApplied, orderDiscount, orderAmount, updatedOn) VALUES '
+    query += 'INSERT INTO crackersdb.order(orderRefID, orderProducts, orderDate, orderStatus, paymentMethod, paymentStatus, deliveryAddress, userID, cartAmount, couponApplied, orderDiscount, orderAmount, updatedOn) VALUES '
     query += ' ( '
+    query += "'" + req.body.orderRefID + "',"
     query += "'" + JSON.stringify(req.body.orderProducts) + "',"
     query += "CURDATE(),"
     query += "'" + req.body.orderStatus + "',"
@@ -134,6 +135,10 @@ const buildSaveOrderQuery = (req, userAction) => {
   }
 }
 
+const fetchUserEmailIDByUserIDQuery = (req) => {
+  var query = 'SELECT userEmail FROM crackersdb.users WHERE userID = ' + req;
+  return query;
+}
 
 module.exports = {
   buildFetchProductsQuery: buildFetchProductsQuery,
@@ -143,5 +148,6 @@ module.exports = {
   buildTempCartSaveQuery: buildTempCartSaveQuery,
   buildFetchCartDataQuery: buildFetchCartDataQuery,
   buildFetchCouponQuery: buildFetchCouponQuery,
-  buildSaveOrderQuery: buildSaveOrderQuery
+  buildSaveOrderQuery: buildSaveOrderQuery,
+  fetchUserEmailIDByUserIDQuery: fetchUserEmailIDByUserIDQuery
 }

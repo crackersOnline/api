@@ -55,9 +55,35 @@ async function fetchOrdersByUserID (request) {
       throw error
     }
   }
+
+  
+// This function gets all the list of the users
+async function fetchDeliveryAddressByID (request) {
+  try {
+    var results = await myaccountDAL.fetchDeliveryAddressByID(request)
+    if (results) {
+       console.log('result', results);
+      if (results.recCount > 0) {
+        const result = {
+        code:200,
+        data: results.users,
+        recCount: results.recCount
+        }
+      return result
+        } else {
+          return { recCount: 0 }
+        }
+    } else {
+      throw new DBError('Data not found')
+    }
+  } catch (error) {
+    throw error
+  }
+}
   
   
   module.exports = {
     fetchUserByEmailID: fetchUserByEmailID,
-    fetchOrdersByUserID : fetchOrdersByUserID
+    fetchOrdersByUserID : fetchOrdersByUserID,
+    fetchDeliveryAddressByID: fetchDeliveryAddressByID
   }

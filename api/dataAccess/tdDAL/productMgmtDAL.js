@@ -338,6 +338,7 @@ function buildSaveOrder (request, type) {
                       }
                       console.log('Transaction completed')
                       connection.destroy()
+                      console.log('insert order', results);
                       resolve(results)
                     })
 
@@ -355,6 +356,37 @@ function buildSaveOrder (request, type) {
   })
 }
 
+function userEmailIDByUserID (request) {
+  return new Promise(function (resolve, reject) {
+    db.createPool()
+      .then(pool => {
+        var dbQuery = buildQuery.fetchUserEmailIDByUserIDQuery(request)
+         console.log(dbQuery)
+        pool.getConnection((err, connection) => {
+          if (err) {
+            reject(new DBError(err))
+          }
+          if (connection) {
+            connection.query(dbQuery, function (err, rows, fields) {
+              // Connection is automatically released when query resolves
+              if (err) {
+                reject(new DBError(err))
+              } else {
+                var results = rows[0].userEmail;
+                connection.destroy()
+                resolve(results)
+              }
+            })
+          }
+        })
+      })
+      .catch(error => {
+        // console.log('create pool error', error)
+        reject(error)
+      })
+  })
+}
+
 
 module.exports = {
   getProducts: getProducts,
@@ -365,5 +397,6 @@ module.exports = {
   fetchCartItemByUser: fetchCartItemByUser,
   fetchCartData: fetchCartData,
   fetchCoupon : fetchCoupon,
-  buildSaveOrder: buildSaveOrder
+  buildSaveOrder: buildSaveOrder,
+  userEmailIDByUserID: userEmailIDByUserID
 }

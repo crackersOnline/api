@@ -1,7 +1,8 @@
 'use strict'
 const productMgmtDAL = require('../dataAccess/tdDAL/productMgmtDAL')
 const DBError = require('../../common/exception/dbException')
-const commonHelper =  require('../helpers/common-helper')
+const commonHelper =  require('../helpers/common-helper');
+const mailHelper = require('../helpers/mail.helper');
 
 
 // This function gets all the list of the users
@@ -110,12 +111,27 @@ async function saveOrder(request) {
       results = await productMgmtDAL.buildSaveOrder(request, 'INSERT')
       if (results) {
         if (results.recCount > 0) {
-        var result = {
-            code:200,
-            data: results.userSave,
-            recCount: results.recCount
-        }
-          return result
+          var userEmail = await productMgmtDAL.userEmailIDByUserID(userID);
+          console.log('request body: =====', request.body);
+          const mailer = await mailHelper.mail.send({
+            template: 'orderSucess',
+            message: {
+              from: process.env.MAILER_SENDERADD,
+              to:userEmail    
+            },
+            locals: {
+              userEmailID: userEmail,
+              orderDetails: request.body
+            }
+          })
+          if(mailer) {
+            var result = {
+              code:200,
+              data: results.userSave,
+              recCount: results.recCount
+          }
+            return result;
+          }
         } else {
           return { recCount: 0 }
         }
@@ -123,7 +139,7 @@ async function saveOrder(request) {
         throw new DBError('Data not found')
       }
   } catch (error) {
-    // console.log('')
+     console.log('', error)
     throw error
   }
 }

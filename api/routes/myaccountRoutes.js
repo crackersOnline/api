@@ -8,5 +8,8 @@ router.route('/fetchMyprofile')
 router.route('/fetchMyOrders')
     .get(myaccountController.fetchMyOrders);
 
+router.route('/fetchDeliveryAddress')
+    .post(myaccountController.fetchDeliveryAddressByID);
+
 
 module.exports = router
