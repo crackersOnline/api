@@ -3,6 +3,7 @@ const productMgmtDAL = require('../dataAccess/tdDAL/productMgmtDAL')
 const DBError = require('../../common/exception/dbException')
 const commonHelper =  require('../helpers/common-helper');
 const mailHelper = require('../helpers/mail.helper');
+const myaccountDAL = require('../dataAccess/tdDAL/myaccountDAL');
 
 
 // This function gets all the list of the users
@@ -112,7 +113,9 @@ async function saveOrder(request) {
       if (results) {
         if (results.recCount > 0) {
           var userEmail = await productMgmtDAL.userEmailIDByUserID(userID);
-          console.log('request body: =====', request.body);
+          var deliveryAddress = await myaccountDAL.fetchDeliveryAddressByID(request.body.deliveryAddress);
+          // console.log('request deliveryAddress: =====', deliveryAddress);
+          // console.log('request body: =====', request.body);
           const mailer = await mailHelper.mail.send({
             template: 'orderSucess',
             message: {
@@ -121,7 +124,8 @@ async function saveOrder(request) {
             },
             locals: {
               userEmailID: userEmail,
-              orderDetails: request.body
+              orderDetails: request.body,
+              orderDeliveryAddress:deliveryAddress.users[0],
             }
           })
           if(mailer) {

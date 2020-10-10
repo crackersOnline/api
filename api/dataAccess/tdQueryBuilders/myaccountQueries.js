@@ -7,7 +7,7 @@ const buildfetchUserOrdersByUserIDQuery = (req) => {
 }
 
 const buildfetchDeliveryAddressByIDQuery = (req) => {
-  let query = "SELECT * FROM crackersdb.addressbook WHERE  userID = '" + req.body.deliveryAddrID + "'";
+  let query = "SELECT * FROM crackersdb.addressbook WHERE  userID = '" + req + "'";
   return query;
 }
 
