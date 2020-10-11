@@ -56,7 +56,7 @@ const buildfetchCartItemByUserQuery = (req) => {
 const buildTempCartSaveQuery = (req, userAction) => {
   var query = ''
   if (userAction === 'INSERT') {
-    query += 'INSERT INTO crackersdb.cart(userID, productID, productName, categoryID, categoryName, productPrice, productQty, createdOn) VALUES '
+    query += 'INSERT INTO crackersdb.cart(userID, productID, productName, categoryID, categoryName, productPrice, productQty, productImage, createdOn) VALUES '
     query += ' ( '
     query += "'" + req.body.userID + "',"
     query += "'" + req.body.productID + "',"
@@ -65,6 +65,7 @@ const buildTempCartSaveQuery = (req, userAction) => {
     query += "'" + req.body.categoryName + "',"
     query += "'" + req.body.productPrice + "',"
     query += "'" + req.body.productQuantity + "',"
+    query += "'" + req.body.productImage + "',"
     query += "now()"
     query += ' )'
     return query
@@ -78,6 +79,7 @@ const buildTempCartSaveQuery = (req, userAction) => {
     query += (req.body.categoryName) ? 'categoryName = ' + "'" + req.body.categoryName + "'," :''
     query += (req.body.productPrice)?  'productPrice = ' + "'" + req.body.productPrice + "'," : ''
     query += (req.body.productQuantity) ? 'productQty = ' + "'" + req.body.productQuantity + "'," :''
+    query += (req.body.productImage) ? 'productImage = ' + "'" + req.body.productImage + "'," :''
     query += 'updatedOn =  ' + "now() "
     query += ' WHERE userID =' + "'" + req.body.userID + "' AND productID ='" + req.body.productID + "' AND userOrderStatus = '0'"
     return query
@@ -96,7 +98,7 @@ const buildTempCartSaveQuery = (req, userAction) => {
 
 // This function returns query to get all the demos based on programId for a given date from teradata
 const buildFetchCartDataQuery = (req) => {
-  var query = "SELECT c.productID, c.productName, c.categoryID, c.categoryName, c.productQty as productQuantity, p.productPrice, p.productMRP,  (c.productQty * p.productPrice) as productTtlQtyPrice "
+  var query = "SELECT c.productID, c.productName, c.categoryID, c.categoryName, c.productQty as productQuantity, p.productPrice, p.productMRP,  (c.productQty * p.productPrice) as productTtlQtyPrice, p.productImage "
   query += " FROM crackersdb.cart as c INNER JOIN crackersdb.product as p on p.productID=c.productID "
   query += "WHERE userID = '"+ req.body.userID +"' AND userOrderStatus='0' "
   return query
